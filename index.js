@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const mongodbStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 //............................................................
 
 // vars
@@ -34,6 +35,15 @@ app.use(
     store: sessionStore,
   })
 );
+
+// csrf protection
+const csrfProtection = csrf(); // adds to req
+app.use(csrfProtection);
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken(); // returns a string token
+  // https://stackoverflow.com/questions/33451053/req-locals-vs-res-locals-vs-res-data-vs-req-data-vs-app-locals-in-express-mi
+  next();
+});
 
 //init
 mongoose
