@@ -65,11 +65,14 @@ mongoose
 
 //routes
 const errorRoutes = require("./routes/errors");
+const authRoutes = require("./routes/auth");
 
+app.use(authRoutes);
 app.use(errorRoutes);
 app.use(errorController.get404);
 
 // errors
 app.use((error, req, res, next) => {
+  console.log(error);
   res.redirect("/500");
 });

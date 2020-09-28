@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
     <p class=" navbar-brand metro-logo">METRO</p>
     <button class=" navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,21 +17,19 @@
             <% if(isSignedIn){ %>
             <li class="nav-item ml-3">
                 <form action="/signout" method="POST">
-                    <button class="btn btn-danger">sign out</button>
+                    <button class="btn btn-danger" type="submit">sign out</button>
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 </form>
             </li>
             <% } else { %>
             <li class="nav-item mr-3">
-                <form action="/signin" method="POST">
-                    <button class="btn btn-outline-success">sign in</button>
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <form action="/signin" method="GET">
+                    <button class="btn btn-outline-success" type="submit">sign in</button>
                 </form>
             </li>
             <li class="nav-item">
-                <form action="/signup" method="POST">
-                    <button class="btn btn-outline-primary">sign up</button>
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <form action="/signup" method="GET">
+                    <button class="btn btn-outline-primary" type="submit">sign up</button>
                 </form>
             </li>
             <% } %>

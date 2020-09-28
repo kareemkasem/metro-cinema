@@ -1,0 +1,29 @@
+<%- include("../include/top.ejs") %>
+</head>
+
+<body>
+    <%- include("../include/nav.ejs") %>
+    <div class="container">
+        <div class="row justify-content-center">
+            <form class="col-12 col-md-8" method="POST" action="/signin" autocomplete="off">
+                <div class="form-group">
+                    <label for="InputEmail">Email address</label>
+                    <input type="email" class="form-control" id="InputEmail" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="InputPassword">Password</label>
+                    <input type="password" class="form-control" id="InputPassword" name="password">
+                </div>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <div class="row justify-content-end mr-0">
+                    <div class="mr-3"> <button type="submit" class="btn btn-primary">sign in</button>
+                    </div>
+                    <form action="/reset-password" method="POST">
+                        <button type="submit" class="btn btn-warning">reset password</button>
+                    </form>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <%- include("../include/bottom.ejs") %>
