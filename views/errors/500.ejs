@@ -1,10 +1,15 @@
-<div class="container">
-    <div class="row">
-        <div class="col align-items-center">
-            <div class="alert alert-primary mb-3" role="alert">
-                our server is acting weird 🤨
+<%- include("../include/top.ejs") %>
+</head>
+
+<body>
+    <%- include("../include/nav.ejs") %>
+    <div class="container my-3">
+        <div class="row justify-content-center">
+            <div class="col align-items-center justify-content-center">
+                <div class="alert alert-warning text-center" role="alert">
+                    our server is acting weird ... and we're fixing it
+                </div>
             </div>
-            <a href="/" style="color: black;"> Go home </a>
         </div>
     </div>
-</div>
+    <%- include("../include/bottom.ejs") %>

@@ -6,12 +6,14 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const mongodbStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
+
+const errorController = require("./controllers/errors");
 //............................................................
 
 // vars
 const MONGO_PASS = "xLhv1yBVM1GHQCZH";
 const MONGO_DB_NAME = "cluster0";
-const MONGO_URI = `mongodb+srv://kareem:@${MONGO_PASS}.z7c8y.mongodb.net/${MONGO_DB_NAME}?retryWrites=true&w=majority`;
+const MONGO_URI = `mongodb+srv://kareem:${MONGO_PASS}@cluster0.z7c8y.mongodb.net/${MONGO_DB_NAME}?retryWrites=true&w=majority`;
 
 // configs
 const app = express();
@@ -45,14 +47,29 @@ app.use((req, res, next) => {
   next();
 });
 
+// logged state in session
+app.use((req, res, next) => {
+  res.locals.isSignedIn = false; // to avoid nav error
+  next();
+});
+
 //init
 mongoose
   .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    app.listen(3000);
+    app.listen(8000);
   })
   .catch((err) => {
     console.log(err);
   });
 
 //routes
+const errorRoutes = require("./routes/errors");
+
+app.use(errorRoutes);
+app.use(errorController.get404);
+
+// errors
+app.use((error, req, res, next) => {
+  res.redirect("/500");
+});

@@ -1,10 +1,15 @@
-<div class="container">
-    <div class="row">
-        <div class="col align-items-center">
-            <div class="alert alert-danger mb-3" role="alert">
-                page not found 😕
+<%- include("../include/top.ejs") %>
+</head>
+
+<body>
+    <%- include("../include/nav.ejs") %>
+    <div class="container my-3">
+        <div class="row justify-content-center">
+            <div class="col align-items-center justify-content-center">
+                <div class="alert alert-danger text-center" role="alert">
+                    page not found
+                </div>
             </div>
-            <a href="/" style="color: black;"> Go home </a>
         </div>
     </div>
-</div>
+    <%- include("../include/bottom.ejs") %>
