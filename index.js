@@ -33,7 +33,11 @@ const multerStorage = multer.diskStorage({
     }
   },
   filename: (req, file, cb) => {
-    cb(null, uuid() + "-" + file.originalname);
+    const nameWithoutExtention = file.originalname.split(".");
+    const extention = nameWithoutExtention.pop();
+    nameWithoutExtention.join("-");
+    const name = `${nameWithoutExtention}-${uuid()}.${extention}`;
+    cb(null, name);
   },
 });
 app.use(multer({ storage: multerStorage }).single("img"));
