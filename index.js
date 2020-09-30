@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const mongodbStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
+const multer = require("multer");
+const { v4: uuid } = require("uuid");
 
 const errorController = require("./controllers/errors");
 //............................................................
@@ -23,6 +25,24 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // parsers
 app.use(bodyParser.urlencoded({ extended: false }));
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const imageMimetypes = ["image/png", "image/jpg", "image/jpeg"];
+    if (imageMimetypes.includes(file.mimetype)) {
+      cb(null, "uploads/images");
+    }
+  },
+  filename: (req, file, cb) => {
+    cb(null, uuid() + "-" + file.originalname);
+  },
+});
+
+app.use(multer({ storage: multerStorage }).single("img"));
+app.use(
+  "/uploads/images",
+  express.static(path.join(__dirname, "uploads", "images"))
+);
 
 // sessions
 const sessionStore = new mongodbStore({

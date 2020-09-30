@@ -12,6 +12,12 @@
             <li class="nav-item <%= path === '/bookings' || path === '/admin/bookings' ? 'active' : '' %>">
                 <a class="nav-link" href="/bookings">Bookings</a>
             </li>
+            <li class="nav-item <%= path === '/admin/add-movie' ? 'active' : '' %>">
+                <a class="nav-link" href="/admin/add-movie">Add Movie</a>
+            </li>
+            <li class="nav-item <%= path === '/admin/notifications' ? 'active' : '' %>">
+                <a class="nav-link" href="/admin/notification">notifications</a>
+            </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             <% if(isSignedIn){ %>
