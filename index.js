@@ -19,13 +19,12 @@ const MONGO_URI = `mongodb+srv://kareem:${MONGO_PASS}@cluster0.z7c8y.mongodb.net
 
 // configs
 const app = express();
-
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "uploads")));
 
 // parsers
 app.use(bodyParser.urlencoded({ extended: false }));
-
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const imageMimetypes = ["image/png", "image/jpg", "image/jpeg"];
@@ -37,12 +36,7 @@ const multerStorage = multer.diskStorage({
     cb(null, uuid() + "-" + file.originalname);
   },
 });
-
 app.use(multer({ storage: multerStorage }).single("img"));
-app.use(
-  "/uploads/images",
-  express.static(path.join(__dirname, "uploads", "images"))
-);
 
 // sessions
 const sessionStore = new mongodbStore({
