@@ -3,36 +3,46 @@
 
 <body>
     <%- include("../include/nav.ejs") %>
-    <form autocomplete="off" method="POST" action="/admin/add-movie" class="container" enctype="multipart/form-data">
+    <form autocomplete="off" method="POST" action="/admin/add-movie" class="container my-2"
+        enctype="multipart/form-data">
+        <% if(errorMessage){ %>
+        <div class="alert alert-danger text-center my-2" role="alert">
+            <%= errorMessage %>
+        </div>
+        <% } %>
         <div class="row justify-content-center">
             <div class="col-12 col-md-8">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="title">
+                    <input type="text" class="form-control" id="title" name="title"
+                        value="<%= oldInput && oldInput.title %>">
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea class="form-control" id="description" rows="3" name="decription"></textarea>
+                    <textarea class="form-control" id="description" rows="3"
+                        name="description"><%= oldInput && oldInput.description %></textarea>
                 </div>
-                <div class="form-group">
+                <div class=" form-group">
                     <label for="year">Year</label>
-                    <input type="string" class="form-control" id="year" placeholder="year">
+                    <input type="string" class="form-control" id="year" name="year"
+                        value="<%= oldInput && oldInput.year %>">
                 </div>
-                <div class="custom-file mb-3">
-                    <label class="custom-file-label" for="img">Choose Image</label>
+                <div class="custom-file mb-2">
+                    <label class="custom-file-label"
+                        for="img"><%= oldInput ? oldInput.imgUrl : "Choose Image" %></label>
                     <input type="file" class="custom-file-input" id="img" name="img">
+                    <input type="hidden" name="imgUrl" value="<%= oldInput && oldInput.imgUrl%>">
                 </div>
                 <div class="form-group">
                     <label for="date">Date</label>
-                    <input type="text" class="form-control" id="date" aria-describedby="dateHelp" placeholder="date"
-                        name="date">
-                    <small id="dateHelp" class="form-text text-dark">format should be exactly as such: jan 11 2021,
-                        08:30 pm</small>
+                    <input type="datetime-local" class="form-control" id="date" name="date"
+                        value="<%= oldInput && oldInput.date %>" />
                 </div>
 
                 <div class="form-group">
                     <label for="seats">Seats</label>
-                    <input type="number" class="form-control" id="seats" name="seats">
+                    <input type="number" class="form-control" id="seats" name="seats"
+                        value="<%= oldInput && oldInput.seats %>" />
                 </div>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <button type="submit" class="btn btn-success btn-lg btn-block">Add Movie</button>
