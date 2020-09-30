@@ -4,12 +4,16 @@ const mongoose = require("mongoose");
 
 const movieSchema = new mongoose.Schema({
   title: String,
-  desription: String,
+  description: String,
   year: String,
   imgUrl: String,
-  time: Date,
+  date: Date,
   seats: Number,
-  seatsBooked: Number,
+  seatsBooked: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("Movie", movieSchema);
