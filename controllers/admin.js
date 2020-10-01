@@ -76,7 +76,18 @@ exports.postAddMovie = (req, res, next) => {
 
 exports.getMovies = async (req, res, next) => {
   try {
-    let movies = await Movie.find();
+    const page = parseInt(req.query.page) || 1;
+    const MOVIES_PER_PAGE = 4;
+
+    const movieCount = await Movie.find().countDocuments((err, count) => {
+      return count;
+    });
+
+    const pageCount = Math.ceil(movieCount / MOVIES_PER_PAGE);
+
+    let movies = await Movie.find()
+      .skip((page - 1) * MOVIES_PER_PAGE)
+      .limit(MOVIES_PER_PAGE);
 
     movies = movies.map((movie) => {
       return {
@@ -94,6 +105,13 @@ exports.getMovies = async (req, res, next) => {
       pageTitle: "Movies",
       path: "/admin/movies",
       movies,
+      currentPage: page,
+      hasNext: MOVIES_PER_PAGE < movieCount && page + 1 <= pageCount,
+      nextPage: page + 1,
+      showNextArrow: pageCount > 3 && page + 2 <= pageCount,
+      hasPrevious: page !== 1,
+      previousPage: page - 1,
+      showBackArrow: pageCount > 3 && page > 2,
     });
   } catch (err) {
     console.log(err);

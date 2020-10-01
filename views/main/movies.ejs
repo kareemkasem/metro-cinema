@@ -4,45 +4,78 @@
 
 <body>
     <%- include("../include/nav.ejs") %>
-    <div class="row justify-content-center main">
-        <% movies.forEach(movie => { %>
-        <div class="card m-2 main-card">
-            <div class="row">
-                <div class="col-12 col-sm-6 align-items-center">
-                    <img class="card-img img" src="<%= movie.imgUrl %>" alt="<%= movie.title%> img">
-                </div>
-                <div class="col-12 col-sm-6 align-items-center content">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= movie.title %></h5>
-                        <p class="card-text description"><%= movie.description %></p>
+    <div class="container-fluid">
+        <div class="row justify-content-center main">
+            <% movies.forEach(movie => { %>
+            <div class="card m-2 main-card">
+                <div class="row">
+                    <div class="col-12 col-sm-6 align-items-center">
+                        <img class="card-img img" src="<%= movie.imgUrl %>" alt="<%= movie.title%> img">
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <span class="text-primary">Year : </span><%= movie.year %>
-                        </li>
-                        <li class="list-group-item">
-                            <span class="text-primary">Date : </span><%= movie.date %>
-                        </li>
-                        <li class="list-group-item">
-                            <span class="text-primary">Seats : </span><%= movie.seatsAvailable %> of <%= movie.seats %>
-                        </li>
-                    </ul>
-                    <div class="card-body">
-                        <% if(path === "/movies"){ %>
-                        <a href="/book-movie/<%= movie._id %>" class="card-link btn btn-primary btn-block">Get your
-                            ticket</a>
-                        <% } else{  %>
-                        <div class="row justify-content-between">
-                            <a href="/admin/delete-movie/<%= movie._id %>" class="card-link btn btn-primary"
-                                style="width: 46%;">Edit</a>
-                            <a href="/admin/edit-movie/<%= movie._id %>" class="card-link btn btn-danger"
-                                style="width: 46%;">Delete</a>
+                    <div class="col-12 col-sm-6 align-items-center content">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= movie.title %></h5>
+                            <p class="card-text description"><%= movie.description %></p>
                         </div>
-                        <% } %>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <span class="text-primary">Year : </span><%= movie.year %>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="text-primary">Date : </span><%= movie.date %>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="text-primary">Seats : </span><%= movie.seatsAvailable %> of
+                                <%= movie.seats %>
+                            </li>
+                        </ul>
+                        <div class="card-body">
+                            <% if(path === "/movies"){ %>
+                            <a href="/book-movie/<%= movie._id %>" class="card-link btn btn-primary btn-block">Get your
+                                ticket</a>
+                            <% } else{  %>
+                            <div class="row justify-content-between">
+                                <a href="/admin/delete-movie/<%= movie._id %>" class="card-link btn btn-primary"
+                                    style="width: 46%;">Edit</a>
+                                <a href="/admin/edit-movie/<%= movie._id %>" class="card-link btn btn-danger"
+                                    style="width: 46%;">Delete</a>
+                            </div>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
             </div>
+            <% }) %>
         </div>
-        <% }) %>
+        <div class="my-3 row justify-content-center">
+            <!-- showBackArrow , showBackArrow , currentPage, nextPage, previousPage, hasNext, hasPrevious -->
+
+            <ul class="pagination">
+                <% if (showBackArrow) { %>
+                <li class="page-item">
+                    <a href="?page=<%= previousPage - 1 %>" class="page-link">
+                        << </a>
+                </li>
+                <% } %> <% if (hasPrevious) { %>
+                <li class="page-item">
+                    <a href="?page=<%= previousPage %>" class="page-link"><%= previousPage %></a>
+                </li>
+                <% } %>
+                <li class="page-item active">
+                    <a href="?page=<%= currentPage %>" class="page-link"><%= currentPage %></a>
+                </li>
+                <% if (hasNext) { %>
+                <li class="page-item">
+                    <a href="?page=<%= nextPage %>" class="page-link"><%= nextPage %></a>
+                </li>
+                <% } %> <% if (showNextArrow) { %>
+                <li class="page-item">
+                    <a href="?page=<%= nextPage + 1 %>" class="page-link">
+                        >>
+                    </a>
+                </li>
+                <% } %>
+            </ul>
+        </div>
     </div>
     <%- include("../include/bottom.ejs") %>
