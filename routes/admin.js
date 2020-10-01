@@ -13,8 +13,11 @@ const existValidator = (fieldName) => {
     .withMessage(`please provide a ${fieldName} value`);
 };
 
+// get routes
 router.get("/add-movie", adminController.getAddMovie);
+router.get("/movies", adminController.getMovies);
 
+// post routes
 router.post(
   "/add-movie",
   [

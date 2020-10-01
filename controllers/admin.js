@@ -73,3 +73,31 @@ exports.postAddMovie = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.getMovies = async (req, res, next) => {
+  try {
+    let movies = await Movie.find();
+
+    movies = movies.map((movie) => {
+      return {
+        title: movie.title,
+        description: movie.description,
+        year: movie.year,
+        date: moment(movie.date).format("MMM DD YYYY , hh:mm a"),
+        seats: movie.seats,
+        seatsAvailable: movie.seats - movie.seatsBooked,
+        imgUrl: movie.imgUrl,
+      };
+    });
+
+    res.render("main/movies", {
+      pageTitle: "Movies",
+      path: "/admin/movies",
+      movies,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500);
+    next(err);
+  }
+};

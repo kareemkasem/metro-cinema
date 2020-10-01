@@ -21,7 +21,10 @@ const MONGO_URI = `mongodb+srv://kareem:${MONGO_PASS}@cluster0.z7c8y.mongodb.net
 const app = express();
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads/images",
+  express.static(path.join(__dirname, "uploads", "images"))
+); // for images
 
 // parsers
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -85,9 +88,11 @@ mongoose
 const errorRoutes = require("./routes/errors");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
+const mainRoutes = require("./routes/main");
 
 app.use(authRoutes);
 app.use("/admin", adminRoutes);
+app.use(mainRoutes);
 app.use(errorRoutes);
 app.use(errorController.get404);
 
