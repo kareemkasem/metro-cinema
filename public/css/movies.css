@@ -1,0 +1,41 @@
+.main-card {
+  width: 36rem;
+  height: 30rem;
+}
+
+.main {
+  margin: 0 !important;
+}
+
+.content {
+  justify-content: center;
+}
+
+.img {
+  width: 17rem;
+  height: 28rem;
+  margin: 1rem 0.5rem;
+}
+
+.description {
+  height: 11rem;
+  overflow: auto;
+}
+
+@media (max-width: 630px) {
+  .main-card {
+    width: 98vw;
+    margin: 2vh 2vw;
+    height: auto;
+  }
+
+  .img {
+    width: 98%;
+    height: 98%;
+    margin: 1%;
+  }
+
+  .description {
+    height: auto;
+  }
+}

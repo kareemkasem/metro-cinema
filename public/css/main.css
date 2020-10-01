@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .metro-logo {
   color: white !important;
   font-weight: 800;
