@@ -5,24 +5,41 @@ const moment = require("moment");
 
 exports.getMovies = async (req, res, next) => {
   try {
+    // numbers
     const page = parseInt(req.query.page) || 1;
     const MOVIES_PER_PAGE = 4;
 
     const movieCount = await Movie.find().countDocuments((err, count) => {
       return count;
     });
-
+    const pinnedMoviesCount = await Movie.find({ pinned: true }).countDocuments(
+      (err, count) => {
+        return count;
+      }
+    );
     const pageCount = Math.ceil(movieCount / MOVIES_PER_PAGE);
-
     let pageNumbers = [];
     for (let i = 1; i <= pageCount; i++) {
       pageNumbers.push(i);
     }
 
-    let movies = await Movie.find()
+    // sorting movies
+    const pinnedMovies = await Movie.find({ pinned: true })
       .skip((page - 1) * MOVIES_PER_PAGE)
       .limit(MOVIES_PER_PAGE);
 
+    let unpinnedMovies = [];
+
+    if (pinnedMovies.length < MOVIES_PER_PAGE) {
+      const alreadyLoaded = MOVIES_PER_PAGE * (page - 1) - pinnedMoviesCount;
+      unpinnedMovies = await Movie.find({ pinned: false })
+        .skip(alreadyLoaded > 0 ? alreadyLoaded : 0)
+        .limit(MOVIES_PER_PAGE - pinnedMovies.length);
+    }
+
+    let movies = [...pinnedMovies, ...unpinnedMovies];
+
+    // preparing for front end
     movies = movies.map((movie) => {
       return {
         id: movie._id,
@@ -36,6 +53,7 @@ exports.getMovies = async (req, res, next) => {
       };
     });
 
+    // rendering
     res.render("main/movies", {
       pageTitle: "Movies",
       path: "/movies",

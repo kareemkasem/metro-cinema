@@ -8,6 +8,11 @@ const movieSchema = new mongoose.Schema({
   year: String,
   imgUrl: String,
   date: Date,
+  pinned: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   seats: Number,
   seatsBooked: {
     type: Number,
