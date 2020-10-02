@@ -14,6 +14,11 @@ exports.getMovies = async (req, res, next) => {
 
     const pageCount = Math.ceil(movieCount / MOVIES_PER_PAGE);
 
+    let pageNumbers = [];
+    for (let i = 1; i <= pageCount; i++) {
+      pageNumbers.push(i);
+    }
+
     let movies = await Movie.find()
       .skip((page - 1) * MOVIES_PER_PAGE)
       .limit(MOVIES_PER_PAGE);
@@ -35,13 +40,11 @@ exports.getMovies = async (req, res, next) => {
       pageTitle: "Movies",
       path: "/movies",
       movies,
-      currentPage: page,
-      hasNext: MOVIES_PER_PAGE < movieCount && page + 1 <= pageCount,
-      nextPage: page + 1,
-      showNextArrow: pageCount > 3 && page + 2 <= pageCount,
-      hasPrevious: page !== 1,
-      previousPage: page - 1,
-      showBackArrow: pageCount > 3 && page > 2,
+      previousArrow: pageNumbers[page - 3], // add +1 to each and it will make sense
+      previous: pageNumbers[page - 2],
+      currentPage: pageNumbers[page - 1],
+      next: pageNumbers[page],
+      nextArrow: pageNumbers[page + 1],
     });
   } catch (err) {
     console.log(err);

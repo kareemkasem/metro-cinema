@@ -4,6 +4,7 @@
 
 <body>
     <%- include("../include/nav.ejs") %>
+    <% if(movies.length > 0){ %>
     <div class="container-fluid">
         <div class="alert alert-danger" role="alert" id="delete-movie-alert" style="display: none;">
             couldn't delete movie
@@ -53,29 +54,27 @@
             <% }) %>
         </div>
         <div class="my-3 row justify-content-center">
-            <!-- showBackArrow , showBackArrow , currentPage, nextPage, previousPage, hasNext, hasPrevious -->
-
             <ul class="pagination">
-                <% if (showBackArrow) { %>
+                <% if (!!previousArrow) { %>
                 <li class="page-item">
-                    <a href="?page=<%= previousPage - 1 %>" class="page-link">
+                    <a href="?page=<%= previousArrow %>" class="page-link">
                         << </a>
                 </li>
-                <% } %> <% if (hasPrevious) { %>
+                <% } %> <% if (!!previous) { %>
                 <li class="page-item">
-                    <a href="?page=<%= previousPage %>" class="page-link"><%= previousPage %></a>
+                    <a href="?page=<%= previous %>" class="page-link"><%= previous %></a>
                 </li>
                 <% } %>
                 <li class="page-item active">
                     <a href="?page=<%= currentPage %>" class="page-link"><%= currentPage %></a>
                 </li>
-                <% if (hasNext) { %>
+                <% if (!!next) { %>
                 <li class="page-item">
-                    <a href="?page=<%= nextPage %>" class="page-link"><%= nextPage %></a>
+                    <a href="?page=<%= next %>" class="page-link"><%= next %></a>
                 </li>
-                <% } %> <% if (showNextArrow) { %>
+                <% } %> <% if (!!nextArrow) { %>
                 <li class="page-item">
-                    <a href="?page=<%= nextPage + 1 %>" class="page-link">
+                    <a href="?page=<%= nextArrow %>" class="page-link">
                         >>
                     </a>
                 </li>
@@ -84,4 +83,11 @@
         </div>
     </div>
     <script src="/js/delete.js"></script>
+    <% } else{%>
+    <div class="container-fluid">
+        <div class="alert alert-warning text-center" role="alert">
+            this page is empty
+        </div>
+    </div>
+    <% } %>
     <%- include("../include/bottom.ejs") %>
