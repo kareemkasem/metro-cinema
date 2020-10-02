@@ -91,6 +91,7 @@ exports.getMovies = async (req, res, next) => {
 
     movies = movies.map((movie) => {
       return {
+        id: movie._id,
         title: movie.title,
         description: movie.description,
         year: movie.year,
@@ -117,5 +118,15 @@ exports.getMovies = async (req, res, next) => {
     console.log(err);
     res.status(500);
     next(err);
+  }
+};
+
+exports.deleteMovie = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    await Movie.findByIdAndDelete(id);
+    res.status(200).json({ message: "successfully deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "couldn't delete deleted" });
   }
 };

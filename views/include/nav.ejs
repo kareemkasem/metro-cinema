@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
-    <p class=" navbar-brand metro-logo">METRO</p>
+    <a class="navbar-brand metro-logo" href="/">METRO</a>
     <button class=" navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item <%= path === '/movies' || path === '/admin/movies' ? 'active' : '' %>">
-                <a class="nav-link" href="/movies">Movies<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/movies">Movies</a>
             </li>
             <li class="nav-item <%= path === '/bookings' || path === '/admin/bookings' ? 'active' : '' %>">
                 <a class="nav-link" href="/bookings">Bookings</a>

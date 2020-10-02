@@ -20,6 +20,7 @@ exports.getMovies = async (req, res, next) => {
 
     movies = movies.map((movie) => {
       return {
+        id: movie._id,
         title: movie.title,
         description: movie.description,
         year: movie.year,

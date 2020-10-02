@@ -32,4 +32,7 @@ router.post(
   adminController.postAddMovie
 );
 
+// other
+router.delete("/delete-movie/:id", adminController.deleteMovie);
+
 module.exports = router;
