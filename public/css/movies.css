@@ -8,6 +8,11 @@
   margin: 0 !important;
 }
 
+.card-title {
+  height: 3rem;
+  overflow: auto;
+}
+
 .content {
   justify-content: center;
 }
@@ -19,7 +24,7 @@
 }
 
 .description {
-  height: 11rem;
+  height: 10rem;
   overflow: auto;
 }
 

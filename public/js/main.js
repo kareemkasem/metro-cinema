@@ -1,6 +1,6 @@
 const deleteMovie = async (btn, id, csrfToken) => {
   try {
-    btn.innerText = "deleting ....";
+    btn.innerText = "....";
     await fetch("/admin/delete-movie/" + id, {
       method: "DELETE",
       headers: {

@@ -21,7 +21,9 @@
                     </div>
                     <div class="col-12 col-sm-6 align-items-center content">
                         <div class="card-body">
-                            <h5 class="card-title"><%= movie.title %></h5>
+                            <h5 class="card-title">
+                                <%= movie.title.length > 39 ? movie.title.substring(0,36) + "..." : movie.title %>
+                            </h5>
                             <p class="card-text description"><%= movie.description %></p>
                         </div>
                         <ul class="list-group list-group-flush">
