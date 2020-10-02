@@ -41,10 +41,8 @@
                             <div class="row justify-content-between">
                                 <a href="/admin/edit-movie/<%= movie.id %>" class="card-link btn btn-primary"
                                     style="width: 46%;">Edit</a>
-                                <input type="hidden" name="id" id="id" value="<%= movie.id %>">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                 <button class="card-link btn btn-danger" style="width: 46%;"
-                                    onclick="deleteMovie(this)">Delete</button>
+                                    onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>' )">Delete</button>
                             </div>
                             <% } %>
                         </div>

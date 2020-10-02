@@ -1,8 +1,4 @@
-const deleteMovie = async (btn) => {
-  const id = btn.parentNode.querySelector("#id").value;
-  const csrfToken = btn.parentNode.querySelector("[name=_csrf]").value;
-  console.log(id);
-
+const deleteMovie = async (btn, id, csrfToken) => {
   try {
     btn.innerText = "deleting ....";
     await fetch("/admin/delete-movie/" + id, {
