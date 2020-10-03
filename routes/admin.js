@@ -31,6 +31,10 @@ router.post(
   ],
   adminController.postAddMovie
 );
+router.post(
+  "/change-movie-pinned-state/:id",
+  adminController.changeMoviePinnedState
+);
 
 // other
 router.delete("/delete-movie/:id", adminController.deleteMovie);

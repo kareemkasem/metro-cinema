@@ -153,3 +153,15 @@ exports.deleteMovie = async (req, res, next) => {
     res.status(500).json({ message: "couldn't delete deleted" });
   }
 };
+
+exports.changeMoviePinnedState = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const movieToPin = await Movie.findById(id);
+    movieToPin.pinned = !movieToPin.pinned;
+    movieToPin.save();
+    res.status(200).json({ message: "pinned state changed successfully" });
+  } catch {
+    res.status(500).json({ message: "couldn't change pinned state" });
+  }
+};

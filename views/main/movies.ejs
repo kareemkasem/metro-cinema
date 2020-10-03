@@ -6,15 +6,13 @@
     <%- include("../include/nav.ejs") %>
     <% if(movies.length > 0){ %>
     <div class="container-fluid">
-        <div class="alert alert-danger" role="alert" id="delete-movie-alert" style="display: none;">
-            couldn't delete movie
+        <div class="alert alert-danger text-center role=" alert" id="error-alert" style="display: none;">
         </div>
         <div class="row justify-content-center main">
             <% movies.forEach(movie => { %>
             <div class="card m-2 main-card">
-                <% if(movie.pinned){ %>
-                <span class="badge badge-warning pinned">pinned</span>
-                <% } %>
+                <span class="badge badge-warning pinned"
+                    style="display: <%= movie.pinned ? 'block' : 'none' %>;">pinned</span>
                 <div class="row">
                     <div class="col-12 col-sm-6 align-items-center">
                         <img class="card-img img" src="<%= movie.imgUrl %>" alt="<%= movie.title%> img">
@@ -44,11 +42,14 @@
                                 ticket</a>
                             <% } else{  %>
                             <div class="row justify-content-between">
-                                <button class="card-link btn btn-warning" style="width: 28%;">Pin</button>
-                                <a href="/admin/edit-movie/<%= movie.id %>" class="card-link btn btn-primary"
+                                <button class="card-link btn btn-warning" style="width: 28%;"
+                                    onclick="changeMoviePinnedState(this, '<%= movie.id %>','<%= csrfToken %>')">
+                                    <%= movie.pinned ? "unPin" : "Pin"%>
+                                </button>
+                                <a href=" /admin/edit-movie/<%= movie.id %>" class="card-link btn btn-primary"
                                     style="width: 28%;">Edit</a>
                                 <button class="card-link btn btn-danger" style="width: 28%;"
-                                    onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>' )">Delete</button>
+                                    onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>')">Delete</button>
                             </div>
                             <% } %>
                         </div>
