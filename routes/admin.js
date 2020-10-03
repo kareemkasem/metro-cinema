@@ -14,8 +14,9 @@ const existValidator = (fieldName) => {
 };
 
 // get routes
-router.get("/add-movie", adminController.getAddMovie);
 router.get("/movies", adminController.getMovies);
+router.get("/add-movie", adminController.getAddMovie);
+router.get("/edit-movie/:id", adminController.getEditMovie);
 
 // post routes
 router.post(
@@ -31,6 +32,7 @@ router.post(
   ],
   adminController.postAddMovie
 );
+
 router.post(
   "/change-movie-pinned-state/:id",
   adminController.changeMoviePinnedState

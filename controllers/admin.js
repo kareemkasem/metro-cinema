@@ -14,6 +14,29 @@ exports.getAddMovie = (req, res, next) => {
   });
 };
 
+exports.getEditMovie = async (req, res, next) => {
+  const id = req.params.id;
+  const movieToEdit = await Movie.findById(id);
+
+  const oldInput = {
+    title: movieToEdit.title,
+    description: movieToEdit.description,
+    year: movieToEdit.year,
+    date: moment(movieToEdit.date).format("YYYY-MM-DDThh:mm"), //this formatting is required for native html date-time local input
+    imgUrl: movieToEdit.imgUrl,
+    seats: movieToEdit.seats,
+  };
+
+  console.log(oldInput);
+
+  res.render("admin/add-movie", {
+    pageTitle: "Edit Movie",
+    path: "/admin/edit-movie",
+    errorMessage: null,
+    oldInput,
+  });
+};
+
 exports.postAddMovie = (req, res, next) => {
   let { title, description, year, date, seats, imgUrl } = req.body;
   const img = req.file;
