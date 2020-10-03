@@ -3,8 +3,8 @@
 
 <body>
     <%- include("../include/nav.ejs") %>
-    <form autocomplete="off" method="POST" action="/admin/add-movie" class="container my-2"
-        enctype="multipart/form-data">
+    <form autocomplete="off" method="POST" action="<% id ? '/admin/edit-movie/' + id : '/admin/add-movie' %>"
+        class="container my-2" enctype="multipart/form-data">
         <% if(errorMessage){ %>
         <div class="alert alert-danger text-center my-2" role="alert">
             <%= errorMessage %>
@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-6">
                         <button type="submit"
-                            class="btn btn-success btn-lg btn-block"><%= oldInput ? "Update Input" : "Add Movie" %></button>
+                            class="btn btn-success btn-lg btn-block"><%= id ? "Update" : oldInput ? "Correct" : "Add" %></button>
                     </div>
                     <div class="col-6">
                         <a class="btn btn-warning btn-lg btn-block" href="/admin/movies">Cancel</a>

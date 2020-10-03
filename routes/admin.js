@@ -34,6 +34,20 @@ router.post(
 );
 
 router.post(
+  "/edit-movie/:id",
+  [
+    existValidator("title").trim(),
+    existValidator("description").trim(),
+    existValidator("year").trim(),
+    existValidator("date"),
+    existValidator("seats")
+      .isInt({ min: 20, max: 200 })
+      .withMessage("seats offered should be between 20 and 200"),
+  ],
+  adminController.postEditMovie
+);
+
+router.post(
   "/change-movie-pinned-state/:id",
   adminController.changeMoviePinnedState
 );

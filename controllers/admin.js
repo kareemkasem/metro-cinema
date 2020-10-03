@@ -11,6 +11,7 @@ exports.getAddMovie = (req, res, next) => {
     path: "/admin/add-movie",
     errorMessage: null,
     oldInput: null,
+    id: null,
   });
 };
 
@@ -27,13 +28,12 @@ exports.getEditMovie = async (req, res, next) => {
     seats: movieToEdit.seats,
   };
 
-  console.log(oldInput);
-
   res.render("admin/add-movie", {
     pageTitle: "Edit Movie",
     path: "/admin/edit-movie",
     errorMessage: null,
     oldInput,
+    id,
   });
 };
 
@@ -53,6 +53,7 @@ exports.postAddMovie = (req, res, next) => {
         date,
         seats,
       },
+      id: null,
     });
     return;
   } else {
@@ -73,6 +74,7 @@ exports.postAddMovie = (req, res, next) => {
         imgUrl,
         seats,
       },
+      id: null,
     });
     return;
   }
@@ -87,6 +89,68 @@ exports.postAddMovie = (req, res, next) => {
   });
 
   newMovie
+    .save()
+    .then(() => {
+      res.status(201).redirect("/admin/movies");
+    })
+    .catch((err) => {
+      next(err);
+      console.log(err);
+    });
+};
+
+exports.postEditMovie = async (req, res, next) => {
+  let { title, description, year, date, seats, imgUrl } = req.body;
+  const id = req.params.id;
+  const img = req.file;
+
+  if (!img && !imgUrl) {
+    res.render("admin/add-movie", {
+      pageTitle: "Add Movie",
+      path: "/admin/add-movie",
+      errorMessage: "please provide an image",
+      oldInput: {
+        title,
+        description,
+        year,
+        date,
+        seats,
+      },
+      id,
+    });
+    return;
+  } else {
+    imgUrl = req.body.imgUrl || `/${img.path}`;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.render("admin/add-movie", {
+      pageTitle: "Add Movie",
+      path: "/admin/add-movie",
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        title,
+        description,
+        year,
+        date,
+        imgUrl,
+        seats,
+      },
+      id,
+    });
+    return;
+  }
+
+  // updating
+  updatedMovie = await Movie.findById(id);
+  updatedMovie.title = title;
+  updatedMovie.description = description;
+  updatedMovie.year = year;
+  updatedMovie.date = date;
+  updatedMovie.imgUrl = imgUrl;
+  updatedMovie.seats = seats;
+  updatedMovie
     .save()
     .then(() => {
       res.status(201).redirect("/admin/movies");
