@@ -9,15 +9,18 @@ exports.getMovies = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const MOVIES_PER_PAGE = 4;
 
-    const movieCount = await Movie.find().countDocuments((err, count) => {
+    const totalMoviesCount = await Movie.find().countDocuments((err, count) => {
       return count;
     });
-    const pinnedMoviesCount = await Movie.find({ pinned: true }).countDocuments(
-      (err, count) => {
-        return count;
-      }
-    );
-    const pageCount = Math.ceil(movieCount / MOVIES_PER_PAGE);
+
+    const totalPinnedMoviesCount = await Movie.find({
+      pinned: true,
+    }).countDocuments((err, count) => {
+      return count;
+    });
+
+    const pageCount = Math.ceil(totalMoviesCount / MOVIES_PER_PAGE);
+
     let pageNumbers = [];
     for (let i = 1; i <= pageCount; i++) {
       pageNumbers.push(i);
@@ -27,14 +30,20 @@ exports.getMovies = async (req, res, next) => {
     const pinnedMovies = await Movie.find({ pinned: true })
       .skip((page - 1) * MOVIES_PER_PAGE)
       .limit(MOVIES_PER_PAGE);
+    const currentPinnedMoviesCount = pinnedMovies.length;
 
     let unpinnedMovies = [];
-
-    if (pinnedMovies.length < MOVIES_PER_PAGE) {
-      const alreadyLoaded = MOVIES_PER_PAGE * (page - 1) - pinnedMoviesCount;
+    if (
+      currentPinnedMoviesCount < MOVIES_PER_PAGE &&
+      currentPinnedMoviesCount > 0
+    ) {
       unpinnedMovies = await Movie.find({ pinned: false })
-        .skip(alreadyLoaded > 0 ? alreadyLoaded : 0)
-        .limit(MOVIES_PER_PAGE - pinnedMovies.length);
+        .skip(0)
+        .limit(MOVIES_PER_PAGE - currentPinnedMoviesCount);
+    } else if (currentPinnedMoviesCount === 0) {
+      unpinnedMovies = await Movie.find({ pinned: false })
+        .skip((page - 1) * MOVIES_PER_PAGE - totalPinnedMoviesCount)
+        .limit(MOVIES_PER_PAGE);
     }
 
     let movies = [...pinnedMovies, ...unpinnedMovies];
@@ -50,6 +59,7 @@ exports.getMovies = async (req, res, next) => {
         seats: movie.seats,
         seatsAvailable: movie.seats - movie.seatsBooked,
         imgUrl: movie.imgUrl,
+        pinned: movie.pinned,
       };
     });
 
