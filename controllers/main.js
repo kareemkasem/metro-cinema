@@ -38,17 +38,30 @@ exports.getMovies = async (req, res, next) => {
       currentPinnedMoviesCount > 0
     ) {
       unpinnedMovies = await Movie.find({ pinned: false })
+        .sort({ date: "asc" })
         .skip(0)
         .limit(MOVIES_PER_PAGE - currentPinnedMoviesCount);
     } else if (currentPinnedMoviesCount === 0) {
       unpinnedMovies = await Movie.find({ pinned: false })
+        .sort({ date: "asc" })
         .skip((page - 1) * MOVIES_PER_PAGE - totalPinnedMoviesCount)
         .limit(MOVIES_PER_PAGE);
     }
 
-    let movies = [...pinnedMovies, ...unpinnedMovies];
-
     // preparing for front end
+    unpinnedMovies.sort((a, b) => {
+      // this step is necessary for the views to be sorted according to nearest date
+      if (a.date < b.date) {
+        return 1;
+      } else if (a.date > b.date) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    let movies = [...pinnedMovies.reverse(), ...unpinnedMovies.reverse()];
+
     movies = movies.map((movie) => {
       return {
         id: movie._id,
