@@ -51,16 +51,16 @@ exports.getMovies = async (req, res, next) => {
     // preparing for front end
     unpinnedMovies.sort((a, b) => {
       // this step is necessary for the views to be sorted according to nearest date
-      if (a.date < b.date) {
+      if (a.date > b.date) {
         return 1;
-      } else if (a.date > b.date) {
+      } else if (a.date < b.date) {
         return -1;
       } else {
         return 0;
       }
     });
 
-    let movies = [...pinnedMovies.reverse(), ...unpinnedMovies.reverse()];
+    let movies = [...pinnedMovies, ...unpinnedMovies];
 
     movies = movies.map((movie) => {
       return {
