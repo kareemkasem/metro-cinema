@@ -7,13 +7,17 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   movies: {
+    required: false,
+    default: [],
     type: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Movie",
+        movie: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Movie",
+        },
+        current: Boolean,
       },
     ],
-    required: false,
   },
 });
 
