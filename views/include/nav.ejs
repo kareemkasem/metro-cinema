@@ -28,7 +28,7 @@
         <ul class="navbar-nav ml-auto">
             <% if(isSignedIn || isAdminSignedIn){ %>
             <li class="nav-item ml-3">
-                <form action="/signout" method="POST">
+                <form action='<%= isSignedIn ? "/signout" : isAdminSignedIn ? "/admin/signout" : "/" %>' method="POST">
                     <button class="btn btn-danger" type="submit">sign out</button>
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 </form>

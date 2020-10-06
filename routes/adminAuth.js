@@ -12,4 +12,6 @@ router.get("/authenticate", adminAuthController.getAuth);
 router.post("/set-password", adminAuthController.postSetPassword);
 router.post("/authenticate", adminAuthController.postAuth);
 
+router.post("/signout", adminAuthController.postSignout);
+
 module.exports = router;
