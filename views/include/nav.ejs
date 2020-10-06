@@ -12,12 +12,17 @@
             <li class="nav-item <%= path === '/bookings' || path === '/admin/bookings' ? 'active' : '' %>">
                 <a class="nav-link" href="/bookings">Bookings</a>
             </li>
+            <% if(isSignedIn){ %>
+            <li class="nav-item <%= path === '/profile' ? 'active' : '' %>">
+                <a class="nav-link" href="/profile">Profile</a>
+            </li>
             <li class="nav-item <%= path === '/admin/add-movie' ? 'active' : '' %>">
                 <a class="nav-link" href="/admin/add-movie">Add Movie</a>
             </li>
+            <% } %>
         </ul>
         <ul class="navbar-nav ml-auto">
-            <% if(isSignedIn){ %>
+            <% if(isSignedIn || isAdminSignedIn){ %>
             <li class="nav-item ml-3">
                 <form action="/signout" method="POST">
                     <button class="btn btn-danger" type="submit">sign out</button>

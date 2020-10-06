@@ -165,3 +165,10 @@ exports.postSignIn = async (req, res, next) => {
     reloadWithError("an error occured");
   }
 };
+
+exports.postSignOut = (req, res, next) => {
+  req.session.destroy((err) => {
+    err && console.log(er);
+    res.redirect("/");
+  });
+};

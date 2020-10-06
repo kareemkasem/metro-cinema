@@ -76,15 +76,28 @@ app.use(async (req, res, next) => {
     if (user) {
       req.user = user;
       res.locals.isSignedIn = true;
-      next();
     } else {
       res.locals.isSignedIn = false;
-      next();
     }
   } else {
     res.locals.isSignedIn = false;
-    next();
   }
+  next();
+});
+
+app.use(async (req, res, next) => {
+  if (req.session.admin) {
+    const admin = await Admin.findById(req.session.admin._id);
+    if (admin) {
+      req.admin = admin;
+      res.locals.isAdminSignedIn = true;
+    } else {
+      res.locals.isAdminSignedIn = false;
+    }
+  } else {
+    res.locals.isAdminSignedIn = false;
+  }
+  next();
 });
 
 //init

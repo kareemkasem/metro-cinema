@@ -29,4 +29,6 @@ router.post(
   authController.postSignIn
 );
 
+router.post("/signout", authController.postSignOut);
+
 module.exports = router;
