@@ -17,6 +17,23 @@ const mailTransporter = nodemailer.createTransport(
 
 const ADMIN_EMAIL = "kariimkasem@gmail.com";
 
+const signIn = (req, res, user) => {
+  req.session.user = user;
+  req.session.save((err) => {
+    if (err) {
+      console.log(err);
+      res.render("auth/signin", {
+        path: "/signin",
+        pageTitle: "sign in",
+        errorMessage: "an error occured",
+        oldInput: { email: user.email },
+      });
+      return;
+    }
+  });
+  res.redirect("/");
+};
+
 exports.getSignIn = (req, res, next) => {
   res.render("auth/signin", {
     path: "/signin",
@@ -95,13 +112,7 @@ exports.postSignUp = async (req, res, next) => {
           </div>
           `,
       });
-
-      res.render("auth/signin", {
-        path: "/signin",
-        pageTitle: "sign in",
-        errorMessage: null,
-        oldInput: null,
-      });
+      signIn(req, res, user);
     } catch (err) {
       console.log(err);
       reloadWithError(
@@ -112,5 +123,45 @@ exports.postSignUp = async (req, res, next) => {
     console.log(err);
     reloadWithError();
     return;
+  }
+};
+
+exports.postSignIn = async (req, res, next) => {
+  const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  function reloadWithError(message = "an error occured please try again") {
+    res.render("auth/signin", {
+      path: "/signin",
+      pageTitle: "sign in",
+      errorMessage: message,
+      oldInput: { email },
+    });
+  }
+
+  if (!errors.isEmpty()) {
+    reloadWithError(errors.array({ onlyFirstError: true })[0].msg);
+    return;
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      reloadWithError("user not found");
+      return;
+    }
+
+    const doesMatch = await bcrypt.compare(password, user.password);
+
+    if (doesMatch) {
+      signIn(req, res, user);
+    } else {
+      reloadWithError("password is incorrect");
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+    reloadWithError("an error occured");
   }
 };

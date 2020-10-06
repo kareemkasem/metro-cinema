@@ -23,4 +23,10 @@ router.post(
   authController.postSignUp
 );
 
+router.post(
+  "/signin",
+  body("email").isEmail().withMessage("please provide a correct email"),
+  authController.postSignIn
+);
+
 module.exports = router;

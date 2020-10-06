@@ -10,6 +10,7 @@ const multer = require("multer");
 const { v4: uuid } = require("uuid");
 
 const errorController = require("./controllers/errors");
+const User = require("./models/user");
 //............................................................
 
 // vars
@@ -68,10 +69,22 @@ app.use((req, res, next) => {
   next();
 });
 
-// logged state in session
-app.use((req, res, next) => {
-  res.locals.isSignedIn = false; // to avoid nav error
-  next();
+// auth state in request and locals
+app.use(async (req, res, next) => {
+  if (req.session.user) {
+    const user = await User.findById(req.session.user._id);
+    if (user) {
+      req.user = user;
+      res.locals.isSignedIn = true;
+      next();
+    } else {
+      res.locals.isSignedIn = false;
+      next();
+    }
+  } else {
+    res.locals.isSignedIn = false;
+    next();
+  }
 });
 
 //init
