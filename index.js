@@ -114,10 +114,12 @@ mongoose
 const errorRoutes = require("./routes/errors");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
+const adminAuthRoutes = require("./routes/adminAuth");
 const mainRoutes = require("./routes/main");
 
 app.use(authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/admin", adminAuthRoutes);
 app.use(mainRoutes);
 app.use(errorRoutes);
 app.use(errorController.get404);

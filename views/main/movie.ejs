@@ -1,0 +1,45 @@
+<div class="card m-2 main-card">
+    <span class="badge badge-warning pinned" style="display: <%= movie.pinned ? 'block' : 'none' %>">pinned!</span>
+    <div class="row">
+        <div class="col-12 col-sm-6 align-items-center">
+            <img class="card-img img" src="<%= movie.imgUrl %>" alt="<%= movie.title%> img">
+        </div>
+        <div class="col-12 col-sm-6 align-items-center content">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <%= movie.title.length > 39 ? movie.title.substring(0,36) + "..." : movie.title %>
+                </h5>
+                <p class="card-text description"><%= movie.description %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <span class="text-primary">Year : </span><%= movie.year %>
+                </li>
+                <li class="list-group-item">
+                    <span class="text-primary">Date : </span><%= movie.date %>
+                </li>
+                <li class="list-group-item">
+                    <span class="text-primary">Seats : </span><%= movie.seatsAvailable %> of
+                    <%= movie.seats %>
+                </li>
+            </ul>
+            <div class="card-body">
+                <% if(path === "/movies"){ %>
+                <a href="/book-movie/<%= movie.id %>" class="card-link btn btn-primary btn-block">Get your
+                    ticket</a>
+                <% } else{  %>
+                <div class="row justify-content-between">
+                    <button class="card-link btn btn-warning" style="width: 28%;"
+                        onclick="changeMoviePinnedState(this, '<%= movie.id %>','<%= csrfToken %>')">
+                        <%= movie.pinned ? "unPin" : "Pin"%>
+                    </button>
+                    <a href=" /admin/edit-movie/<%= movie.id %>" class="card-link btn btn-primary"
+                        style="width: 28%;">Edit</a>
+                    <button class="card-link btn btn-danger" style="width: 28%;"
+                        onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>')">Delete</button>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

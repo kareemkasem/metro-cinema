@@ -1,0 +1,22 @@
+<%- include("../include/top.ejs") %>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center my-5">
+            <div class="col-12 col-md-8 justify-content-center align-items-center">
+                <h1 class="text-danger display-3 text-center">
+                    Welcome to the admin dash board
+                </h1>
+                <a href="/admin/authenticate" class="btn btn-success btn-block btn-lg my-2">Authenticate</a>
+                <a href="/admin/set-password" class=" btn btn-primary btn-block btn-lg my-2">Set
+                    Password</a>
+                <a href="/" class="btn btn-warning btn-block btn-lg my-2">Cancel</a>
+                <small class="text-muted">* Please make sure you contacted the db admin first before
+                    proceeding with any
+                    operation.</small>
+            </div>
+        </div>
+    </div>
+
+    <%- include("../include/bottom.ejs") %>

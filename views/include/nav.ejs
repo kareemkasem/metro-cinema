@@ -7,15 +7,19 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item <%= path === '/movies' || path === '/admin/movies' ? 'active' : '' %>">
-                <a class="nav-link" href="/movies">Movies</a>
+                <a class="nav-link"
+                    href='<%= isSignedIn ? "/movies" : isAdminSignedIn ? "/admin/movies" : "/signin"%>'>Movies</a>
             </li>
             <li class="nav-item <%= path === '/bookings' || path === '/admin/bookings' ? 'active' : '' %>">
-                <a class="nav-link" href="/bookings">Bookings</a>
+                <a class="nav-link"
+                    href='<%= isSignedIn ? "/movies" : isAdminSignedIn ? "/admin/movies" : "/signin"%>'>Bookings</a>
             </li>
             <% if(isSignedIn){ %>
             <li class="nav-item <%= path === '/profile' ? 'active' : '' %>">
                 <a class="nav-link" href="/profile">Profile</a>
             </li>
+            <% } %>
+            <% if(isAdminSignedIn){%>
             <li class="nav-item <%= path === '/admin/add-movie' ? 'active' : '' %>">
                 <a class="nav-link" href="/admin/add-movie">Add Movie</a>
             </li>
