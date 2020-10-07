@@ -172,3 +172,19 @@ exports.postSignOut = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+exports.getResetPassword = (req, res, next) => {
+  res.render("auth/reset-password", {
+    path: "/reset-password",
+    pageTitle: "reset password",
+    errorMessage: null,
+    oldInput: null,
+  });
+};
+
+exports.getResetPasswordSuccess = (req, res, next) => {
+  res.render("auth/reset-password-success", {
+    path: "/reset-password-success",
+    pageTitle: "reset password",
+  });
+};
