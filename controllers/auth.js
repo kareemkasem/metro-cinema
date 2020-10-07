@@ -35,6 +35,8 @@ const signIn = (req, res, user) => {
   res.redirect("/");
 };
 
+let newPasswordError;
+
 exports.getSignIn = (req, res, next) => {
   res.render("auth/signin", {
     path: "/signin",
@@ -203,7 +205,7 @@ exports.postResetPassword = async (req, res, next) => {
   }
 
   try {
-    crypto.randomBytes(64, async (err, buffer) => {
+    crypto.randomBytes(32, async (err, buffer) => {
       if (err) {
         reloadWithError();
         return;
@@ -240,5 +242,83 @@ exports.postResetPassword = async (req, res, next) => {
     });
   } catch (error) {
     reloadWithError();
+  }
+};
+
+exports.getNewPassword = async (req, res, next) => {
+  const token = req.params.token;
+  const error = newPasswordError;
+
+  const render = (errorMessage = "something went wrong") => {
+    res.render("auth/new-password", {
+      pageTitle: "new password",
+      path: "/new-password",
+      errorMessage,
+      token,
+    });
+  };
+
+  if (error) {
+    render(error);
+    return;
+  }
+
+  try {
+    const user = await User.findOne({ token });
+    if (!user) {
+      render("token not found. please make a new request", null);
+    } else {
+      render(null, token);
+    }
+  } catch (error) {
+    render();
+  }
+};
+
+exports.postNewPassword = async (req, res, next) => {
+  const token = req.params.token;
+  const { password, retypePassword } = req.body;
+  const errors = validationResult(req);
+  newPasswordError = null;
+
+  if (!errors.isEmpty()) {
+    newPasswordError = errors.array()[0].msg;
+    res.redirect(`/new-password/${token}`);
+    return;
+  }
+
+  if (password !== retypePassword) {
+    console.log(token);
+    newPasswordError = "passwords don't match";
+    res.redirect(`/new-password/${token}`);
+    return;
+  }
+
+  try {
+    // checks
+    const user = await User.findOne({ token });
+    if (!user) {
+      newPasswordError = "user not found";
+      res.redirect(`/new-password/${token}`);
+      return;
+    }
+    const tokenExpirationDate = user.tokenExpirationDate;
+    if (Date.now() > tokenExpirationDate) {
+      newPasswordError = "token expired";
+      res.redirect(`/new-password/${token}`);
+      return;
+    }
+
+    const newPassword = await bcrypt.hash(password, 12);
+    user.password = newPassword;
+    user.token = undefined;
+    user.tokenExpirationDate = undefined;
+    await user.save();
+    res.redirect("/signin");
+  } catch (error) {
+    console.log(error);
+    newPasswordError = "an error occured";
+    res.redirect(`/new-password/${token}`);
+    return;
   }
 };

@@ -10,6 +10,7 @@ router.get("/signin", authController.getSignIn);
 router.get("/signup", authController.getSignUp);
 router.get("/reset-password", authController.getResetPassword);
 router.get("/reset-password-success", authController.getResetPasswordSuccess);
+router.get("/new-password/:token", authController.getNewPassword);
 
 router.post(
   "/signup",
@@ -34,5 +35,13 @@ router.post(
 router.post("/signout", authController.postSignOut);
 
 router.post("/reset-password", authController.postResetPassword);
+
+router.post(
+  "/new-password/:token",
+  body("password")
+    .isLength({ min: 8, max: 16 })
+    .withMessage("password must be between 8 and 16 characters"),
+  authController.postNewPassword
+);
 
 module.exports = router;
