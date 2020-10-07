@@ -191,7 +191,7 @@ exports.getResetPasswordSuccess = (req, res, next) => {
 };
 
 exports.postResetPassword = async (req, res, next) => {
-  const email  = req.body.email || req.query.email
+  const email = req.body.email || req.query.email;
 
   function reloadWithError(message = "an error occured please try again") {
     res.render("auth/reset-password", {
@@ -203,45 +203,42 @@ exports.postResetPassword = async (req, res, next) => {
   }
 
   try {
-    crypto.randomBytes(64, (err, buffer) => {
+    crypto.randomBytes(64, async (err, buffer) => {
       if (err) {
-        reloadWithError()
+        reloadWithError();
         return;
       } else {
         const token = buffer.toString("hex");
-        const user = await User.findOne({email})
-        if(!user){
-          reloadWithError("email not found")
+        const user = await User.findOne({ email });
+        if (!user) {
+          reloadWithError("email not found");
           return;
         }
-        user.token = token
-        user.tokenExpirationDate = Date.now() + 8 * 60 * 60 * 1000 //8 hours in milliseconds
-        try{
-        await user.save()
-        } catch(userError){
-          reloadWithError()
+        user.token = token;
+        user.tokenExpirationDate = Date.now() + 8 * 60 * 60 * 1000; //8 hours in milliseconds
+        try {
+          await user.save();
+        } catch (userError) {
+          reloadWithError();
           return;
         }
-        res.redirect("/reset-password-succcess");
+        res.redirect("/reset-password-success");
         mailTransporter.sendMail({
           from: ADMIN_EMAIL,
           to: email,
           subject: "password reset",
           html: `
-                <h3>Hi ${user.name.split(" ")[0]}, you requested a password reset</h3>
+                <h3>Hi ${
+                  user.name.split(" ")[0]
+                }, you requested a password reset</h3>
                 <hr />
                 <h5>click <a href="http://localhost:8000/new-password/${token}">here</a> to reset your password</h5>
                 <p>please notice that this link is valid for 8 hours only</p>
-          `
-        })
+          `,
+        });
       }
-    }); 
+    });
   } catch (error) {
-    reloadWithError()
+    reloadWithError();
   }
-
-
-  // create a token
-  // save it to the user we find by email
-  // make an expiration date
 };

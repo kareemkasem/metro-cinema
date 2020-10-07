@@ -33,4 +33,6 @@ router.post(
 
 router.post("/signout", authController.postSignOut);
 
+router.post("/reset-password", authController.postResetPassword);
+
 module.exports = router;

@@ -21,11 +21,10 @@
                 </div>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <div class="row justify-content-end mr-0">
-                    <div class="mr-3"> <button type="submit" class="btn btn-primary">sign in</button>
+                    <div class="">
+                        <a href="/reset-password" class="btn btn-warning mr-3">reset password</a>
+                        <button type="submit" class="btn btn-primary">sign in</button>
                     </div>
-                    <form action="/reset-password" method="POST">
-                        <button type="submit" class="btn btn-warning">reset password</button>
-                    </form>
                 </div>
             </form>
         </div>
