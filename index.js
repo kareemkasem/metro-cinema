@@ -12,6 +12,8 @@ const { v4: uuid } = require("uuid");
 const errorController = require("./controllers/errors");
 const User = require("./models/user");
 const Admin = require("./models/admin");
+
+const adminAuthCheck = require("./middleware/adminAuthCheck");
 //............................................................
 
 // vars
@@ -120,7 +122,7 @@ const mainRoutes = require("./routes/main");
 
 app.use(authRoutes);
 app.use("/admin", adminAuthRoutes);
-app.use("/admin", adminRoutes);
+app.use("/admin", adminAuthCheck, adminRoutes);
 app.use(mainRoutes);
 app.use(errorRoutes);
 app.use(errorController.get404);
