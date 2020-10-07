@@ -31,6 +31,10 @@ exports.postSetPassword = async (req, res, next) => {
     });
   };
 
+  if (req.session.user) {
+    return reloadWithError("please sign out as a user first");
+  }
+
   let { username, authKey, password } = req.body;
   try {
     const admin = await Admin.findOne({ username, authKey });
@@ -55,6 +59,10 @@ exports.postAuth = async (req, res, next) => {
       errorMessage: error,
     });
   };
+
+  if (req.session.user) {
+    return reloadWithError("please sign out as a user first");
+  }
 
   let { username, password } = req.body;
   try {
