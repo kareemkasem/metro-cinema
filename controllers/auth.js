@@ -191,7 +191,7 @@ exports.getResetPasswordSuccess = (req, res, next) => {
 };
 
 exports.postResetPassword = async (req, res, next) => {
-  const { email } = req.body;
+  const email  = req.body.email || req.query.email
 
   function reloadWithError(message = "an error occured please try again") {
     res.render("auth/reset-password", {
