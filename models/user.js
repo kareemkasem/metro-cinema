@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  tokenExpireDate: {
+  tokenExpirationDate: {
     type: Date,
     required: false,
   },
