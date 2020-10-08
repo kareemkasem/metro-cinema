@@ -37,6 +37,11 @@ exports.postSetPassword = async (req, res, next) => {
   }
 
   let { username, authKey, password } = req.body;
+
+  if (!password.trim()) {
+    return reloadWithError("password can't be empty space");
+  }
+
   try {
     const admin = await Admin.findOne({ username, authKey });
 
@@ -64,6 +69,11 @@ exports.postAuth = async (req, res, next) => {
   }
 
   let { username, password } = req.body;
+
+  if (!password.trim()) {
+    return reloadWithError("password can't be empty space");
+  }
+
   try {
     const admin = await Admin.findOne({ username });
     if (!admin) {
