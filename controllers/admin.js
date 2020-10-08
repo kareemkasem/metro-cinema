@@ -218,6 +218,7 @@ exports.getMovies = async (req, res, next) => {
         seatsAvailable: movie.seats - movie.seatsBooked,
         imgUrl: movie.imgUrl,
         pinned: movie.pinned,
+        hidden: movie.hidden,
       };
     });
 

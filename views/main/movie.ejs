@@ -36,9 +36,13 @@
                     <a href=" /admin/edit-movie/<%= movie.id %>" class="card-link btn btn-primary"><i
                             class="far fa-edit"></i></a>
                     <button class="card-link btn btn-secondary"
-                        onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>')"><i
-                            class="far fa-eye-slash"></i></button>
-                    <!-- <i class="far fa-eye"></i> -->
+                        onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>')">
+                        <% if(movie.hidden){%>
+                        <i class="far fa-eye"></i>
+                        <% } else {%>
+                        <i class="far fa-eye-slash"></i>
+                        <% } %>
+                    </button>
                     <button class="card-link btn btn-danger"
                         onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>')"><i
                             class="far fa-trash-alt"></i></button>
