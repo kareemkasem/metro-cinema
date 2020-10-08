@@ -2,6 +2,7 @@
 const express = require("express");
 const authController = require("../controllers/auth");
 const { body } = require("express-validator");
+const userAuthCheck = require("../middleware/userAuthCheck");
 // .............................................................
 
 const router = express.Router();
@@ -11,6 +12,7 @@ router.get("/signup", authController.getSignUp);
 router.get("/reset-password", authController.getResetPassword);
 router.get("/reset-password-success", authController.getResetPasswordSuccess);
 router.get("/new-password/:token", authController.getNewPassword);
+router.get("/change-password", userAuthCheck, authController.getChangePassword);
 
 router.post(
   "/signup",
@@ -42,6 +44,14 @@ router.post(
     .isLength({ min: 8, max: 16 })
     .withMessage("password must be between 8 and 16 characters"),
   authController.postNewPassword
+);
+
+router.post(
+  "/change-password",
+  body("newPassword")
+    .isLength({ min: 8, max: 16 })
+    .withMessage("password must be between 8 and 16 characters"),
+  authController.postChangePassword
 );
 
 module.exports = router;

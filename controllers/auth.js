@@ -35,7 +35,7 @@ const signIn = (req, res, user) => {
   res.redirect("/");
 };
 
-let newPasswordError;
+let inputError;
 
 exports.getSignIn = (req, res, next) => {
   res.render("auth/signin", {
@@ -247,7 +247,7 @@ exports.postResetPassword = async (req, res, next) => {
 
 exports.getNewPassword = async (req, res, next) => {
   const token = req.params.token;
-  const error = newPasswordError;
+  const error = inputError;
 
   const render = (errorMessage = "something went wrong") => {
     res.render("auth/new-password", {
@@ -279,17 +279,17 @@ exports.postNewPassword = async (req, res, next) => {
   const token = req.params.token;
   const { password, retypePassword } = req.body;
   const errors = validationResult(req);
-  newPasswordError = null;
+  inputError = null;
 
   if (!errors.isEmpty()) {
-    newPasswordError = errors.array()[0].msg;
+    inputError = errors.array()[0].msg;
     res.redirect(`/new-password/${token}`);
     return;
   }
 
   if (password !== retypePassword) {
     console.log(token);
-    newPasswordError = "passwords don't match";
+    inputError = "passwords don't match";
     res.redirect(`/new-password/${token}`);
     return;
   }
@@ -298,13 +298,13 @@ exports.postNewPassword = async (req, res, next) => {
     // checks
     const user = await User.findOne({ token });
     if (!user) {
-      newPasswordError = "user not found";
+      inputError = "user not found";
       res.redirect(`/new-password/${token}`);
       return;
     }
     const tokenExpirationDate = user.tokenExpirationDate;
     if (Date.now() > tokenExpirationDate) {
-      newPasswordError = "token expired";
+      inputError = "token expired";
       res.redirect(`/new-password/${token}`);
       return;
     }
@@ -317,8 +317,62 @@ exports.postNewPassword = async (req, res, next) => {
     res.redirect("/signin");
   } catch (error) {
     console.log(error);
-    newPasswordError = "an error occured";
+    inputError = "an error occured";
     res.redirect(`/new-password/${token}`);
     return;
+  }
+};
+
+exports.getChangePassword = (req, res, next) => {
+  res.render("auth/change-password", {
+    pageTitle: "Change Password",
+    path: "/profile",
+    errorMessage: inputError,
+  });
+};
+
+exports.postChangePassword = async (req, res, next) => {
+  const { currentPassword, newPassword, retypeNewPassword } = req.body;
+  inputError = null;
+  const validationErrors = validationResult(req);
+
+  const redirectWithError = (msg = "an error occured") => {
+    inputError = msg;
+    res.redirect("/change-password");
+  };
+
+  try {
+    const doesMatch = await bcrypt.compare(currentPassword, req.user.password);
+    if (!doesMatch) {
+      return redirectWithError("current password incorrect");
+    }
+  } catch (error) {
+    return redirectWithError();
+  }
+
+  try {
+    const doesMatch = await bcrypt.compare(newPassword, req.user.password);
+    if (doesMatch) {
+      return redirectWithError("can't reset to the same password");
+    }
+  } catch (error) {
+    return redirectWithError();
+  }
+
+  if (newPassword !== retypeNewPassword) {
+    return redirectWithError("passwords don't match");
+  }
+
+  if (!validationErrors.isEmpty()) {
+    return redirectWithError(validationErrors.array()[0].msg);
+  }
+
+  try {
+    const user = req.user;
+    user.password = await bcrypt.hash(newPassword, 12);
+    await user.save();
+    res.redirect("/profile");
+  } catch (error) {
+    return redirectWithError();
   }
 };
