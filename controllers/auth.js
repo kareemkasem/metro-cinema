@@ -369,7 +369,9 @@ exports.postChangePassword = async (req, res, next) => {
 
   try {
     const user = req.user;
-    user.password = await bcrypt.hash(newPassword, 12);
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    req.session.user.password = hashedPassword;
+    user.password = hashedPassword;
     await user.save();
     res.redirect("/profile");
   } catch (error) {

@@ -1,7 +1,11 @@
 // imports .................................................
 const Movie = require("../models/movie");
 const moment = require("moment");
+const { validationResult } = require("express-validator");
+const user = require("../models/user");
 // .........................................................
+
+let inputError;
 
 exports.getMovies = async (req, res, next) => {
   try {
@@ -102,4 +106,34 @@ exports.getProfile = (req, res, next) => {
     path: "/profile",
     name,
   });
+};
+
+exports.getChangeName = (req, res, next) => {
+  res.render("main/change-name", {
+    pageTitle: "change name",
+    path: "/profile",
+    errorMessage: inputError,
+  });
+};
+
+exports.postChangeName = async (req, res, next) => {
+  inputError = null;
+  const name = req.body.name;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    inputError = errors.array()[0].msg;
+    return res.redirect("/change-name");
+  }
+
+  try {
+    req.session.user.name = name;
+    req.user.name = name;
+    await req.user.save();
+    res.redirect("/profile");
+  } catch (error) {
+    console.log(error);
+    inputError = "an error occured";
+    return res.redirect("/change-name");
+  }
 };
