@@ -42,12 +42,17 @@ exports.postSetPassword = async (req, res, next) => {
     return reloadWithError("password can't be empty space");
   }
 
+  if (!authKey) {
+    return reloadWithError("authKey can't be null");
+  }
+
   try {
     const admin = await Admin.findOne({ username, authKey });
 
     if (admin) {
       password = await bcrypt.hash(password, 12);
       admin.password = password;
+      admin.authKey = null;
       await admin.save();
       res.redirect("/admin");
     } else {
