@@ -3,6 +3,8 @@ const Admin = require("../models/admin");
 const bcrypt = require("bcryptjs");
 // ...........................................
 
+let inputError;
+
 exports.getMain = (req, res, next) => {
   res.render("admin/main", {
     pageTitle: "Admin",
@@ -12,23 +14,22 @@ exports.getMain = (req, res, next) => {
 exports.getSetPassword = (req, res, next) => {
   res.render("admin/set-password", {
     pageTitle: "Set Password",
-    errorMessage: null,
+    errorMessage: inputError,
   });
 };
 
 exports.getAuth = (req, res, next) => {
   res.render("admin/auth", {
     pageTitle: "Auth",
-    errorMessage: null,
+    errorMessage: inputError,
   });
 };
 
 exports.postSetPassword = async (req, res, next) => {
-  const reloadWithError = (error = "an error occured") => {
-    res.render("admin/set-password", {
-      pageTitle: "Set Password",
-      errorMessage: error,
-    });
+  inputError = null;
+  const reloadWithError = (msg = "an error occured") => {
+    inputError = msg;
+    res.redirect("/admin/set-password");
   };
 
   if (req.session.user) {
@@ -53,11 +54,9 @@ exports.postSetPassword = async (req, res, next) => {
 };
 
 exports.postAuth = async (req, res, next) => {
-  const reloadWithError = (error = "an error occured") => {
-    res.render("admin/auth", {
-      pageTitle: "Auth",
-      errorMessage: error,
-    });
+  const reloadWithError = (msg = "an error occured") => {
+    inputError = msg;
+    res.redirect("/admin/authenticate");
   };
 
   if (req.session.user) {

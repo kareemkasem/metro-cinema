@@ -41,7 +41,7 @@ exports.getSignIn = (req, res, next) => {
   res.render("auth/signin", {
     path: "/signin",
     pageTitle: "sign in",
-    errorMessage: null,
+    errorMessage: inputError,
     oldInput: null,
   });
 };
@@ -50,7 +50,7 @@ exports.getSignUp = (req, res, next) => {
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "sign up",
-    errorMessage: null,
+    errorMessage: inputError,
     oldInput: null,
   });
 };
@@ -58,14 +58,11 @@ exports.getSignUp = (req, res, next) => {
 exports.postSignUp = async (req, res, next) => {
   let { name, email, password, retypePassword } = req.body;
   const errors = validationResult(req);
+  inputError = null;
 
-  function reloadWithError(message = "an error occured please try again") {
-    res.render("auth/signup", {
-      path: "/signup",
-      pageTitle: "sign up",
-      errorMessage: message,
-      oldInput: { name, email },
-    });
+  function reloadWithError(msg = "an error occured please try again") {
+    inputError = msg;
+    res.redirect("/signup");
   }
 
   // error checking ....................................
@@ -132,14 +129,11 @@ exports.postSignUp = async (req, res, next) => {
 exports.postSignIn = async (req, res, next) => {
   const { email, password } = req.body;
   const errors = validationResult(req);
+  inputError = null;
 
-  function reloadWithError(message = "an error occured please try again") {
-    res.render("auth/signin", {
-      path: "/signin",
-      pageTitle: "sign in",
-      errorMessage: message,
-      oldInput: { email },
-    });
+  function reloadWithError(msg = "an error occured please try again") {
+    inputError = msg;
+    res.redirect("/signin");
   }
 
   if (!errors.isEmpty()) {
@@ -180,7 +174,7 @@ exports.getResetPassword = (req, res, next) => {
   res.render("auth/reset-password", {
     path: "/reset-password",
     pageTitle: "reset password",
-    errorMessage: null,
+    errorMessage: inputError,
     oldInput: null,
   });
 };
@@ -193,15 +187,12 @@ exports.getResetPasswordSuccess = (req, res, next) => {
 };
 
 exports.postResetPassword = async (req, res, next) => {
-  const email = req.body.email || req.query.email;
+  const email = req.body.email;
+  inputError = null;
 
-  function reloadWithError(message = "an error occured please try again") {
-    res.render("auth/reset-password", {
-      path: "/reset-password",
-      pageTitle: "reset password",
-      errorMessage: message,
-      oldInput: { email },
-    });
+  function reloadWithError(msg = "an error occured please try again") {
+    inputError = msg;
+    res.redirect("/reset-password");
   }
 
   try {
@@ -247,32 +238,13 @@ exports.postResetPassword = async (req, res, next) => {
 
 exports.getNewPassword = async (req, res, next) => {
   const token = req.params.token;
-  const error = inputError;
 
-  const render = (errorMessage = "something went wrong") => {
-    res.render("auth/new-password", {
-      pageTitle: "new password",
-      path: "/new-password",
-      errorMessage,
-      token,
-    });
-  };
-
-  if (error) {
-    render(error);
-    return;
-  }
-
-  try {
-    const user = await User.findOne({ token });
-    if (!user) {
-      render("token not found. please make a new request", null);
-    } else {
-      render(null, token);
-    }
-  } catch (error) {
-    render();
-  }
+  res.render("auth/new-password", {
+    pageTitle: "new password",
+    path: "/new-password",
+    errorMessage: inputError,
+    token,
+  });
 };
 
 exports.postNewPassword = async (req, res, next) => {
@@ -336,7 +308,7 @@ exports.postChangePassword = async (req, res, next) => {
   inputError = null;
   const validationErrors = validationResult(req);
 
-  const redirectWithError = (msg = "an error occured") => {
+  const reloadWithError = (msg = "an error occured") => {
     inputError = msg;
     res.redirect("/change-password");
   };
@@ -344,27 +316,27 @@ exports.postChangePassword = async (req, res, next) => {
   try {
     const doesMatch = await bcrypt.compare(currentPassword, req.user.password);
     if (!doesMatch) {
-      return redirectWithError("current password incorrect");
+      return reloadWithError("current password incorrect");
     }
   } catch (error) {
-    return redirectWithError();
+    return reloadWithError();
   }
 
   try {
     const doesMatch = await bcrypt.compare(newPassword, req.user.password);
     if (doesMatch) {
-      return redirectWithError("can't reset to the same password");
+      return reloadWithError("can't reset to the same password");
     }
   } catch (error) {
-    return redirectWithError();
+    return reloadWithError();
   }
 
   if (newPassword !== retypeNewPassword) {
-    return redirectWithError("passwords don't match");
+    return reloadWithError("passwords don't match");
   }
 
   if (!validationErrors.isEmpty()) {
-    return redirectWithError(validationErrors.array()[0].msg);
+    return reloadWithError(validationErrors.array()[0].msg);
   }
 
   try {
@@ -375,6 +347,6 @@ exports.postChangePassword = async (req, res, next) => {
     await user.save();
     res.redirect("/profile");
   } catch (error) {
-    return redirectWithError();
+    return reloadWithError();
   }
 };
