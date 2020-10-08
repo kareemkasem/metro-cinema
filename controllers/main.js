@@ -93,3 +93,13 @@ exports.getMovies = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getProfile = (req, res, next) => {
+  const name = req.session.user.name;
+
+  res.render("main/profile", {
+    pageTitle: "profile",
+    path: "/profile",
+    name,
+  });
+};

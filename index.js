@@ -124,6 +124,13 @@ app.use(authRoutes);
 app.use("/admin", adminAuthRoutes);
 app.use("/admin", adminAuthCheck, adminRoutes);
 app.use(mainRoutes);
+app.get("/", (req, res) => {
+  if (req.session.admin) {
+    res.redirect("/admin/movies");
+  } else {
+    res.redirect("/movies");
+  }
+});
 app.use(errorRoutes);
 app.use(errorController.get404);
 

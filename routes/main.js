@@ -8,6 +8,6 @@ const userAuthCheck = require("../middleware/userAuthCheck");
 const router = express.Router();
 
 router.get("/movies", mainController.getMovies);
-// bookings have to go through a userAuthCheck
+router.get("/profile", userAuthCheck, mainController.getProfile);
 
 module.exports = router;

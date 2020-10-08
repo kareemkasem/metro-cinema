@@ -20,11 +20,8 @@ const userSchema = new mongoose.Schema({
     default: [],
     type: [
       {
-        movie: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Movie",
-        },
-        current: Boolean,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Movie",
       },
     ],
   },
