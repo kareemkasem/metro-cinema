@@ -19,6 +19,11 @@ const movieSchema = new mongoose.Schema({
     required: false,
     default: 0,
   },
+  hidden: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Movie", movieSchema);
