@@ -1,5 +1,12 @@
 <div class="card m-2 main-card">
-    <span class="badge badge-warning pinned" style="display: <%= movie.pinned ? 'block' : 'none' %>">pinned!</span>
+    <div class="badge-container">
+        <span class="badge badge-warning" id="pinned-badge" style="display: <%= movie.pinned ? 'block' : 'none' %>">
+            pinned!
+        </span>
+        <span class="badge badge-dark" id="hidden-badge" style="display: <%= movie.hidden ? 'block' : 'none' %>">
+            hidden
+        </span>
+    </div>
     <div class="row">
         <div class="col-12 col-sm-6 align-items-center">
             <img class="card-img img" src="<%= movie.imgUrl %>" alt="<%= movie.title%> img">
@@ -25,18 +32,18 @@
             </ul>
             <div class="card-body">
                 <% if(path === "/movies"){ %>
-                <a href="/book-movie/<%= movie.id %>" class="card-link btn btn-primary btn-block">Get your
+                <a href="/book-movie/<%= movie._id %>" class="card-link btn btn-primary btn-block">Get your
                     ticket</a>
                 <% } else{  %>
                 <div class="row justify-content-between">
                     <button class="card-link btn btn-warning"
-                        onclick="changeMoviePinnedState(this, '<%= movie.id %>','<%= csrfToken %>')">
+                        onclick="changeMoviePinnedState(this, '<%= movie._id %>','<%= csrfToken %>')">
                         <%= movie.pinned ? "unPin" : "Pin"%>
                     </button>
-                    <a href=" /admin/edit-movie/<%= movie.id %>" class="card-link btn btn-primary"><i
+                    <a href=" /admin/edit-movie/<%= movie._id %>" class="card-link btn btn-primary"><i
                             class="far fa-edit"></i></a>
-                    <button class="card-link btn btn-secondary"
-                        onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>')">
+                    <button class="card-link btn btn-dark"
+                        onclick="changeMovieHiddenState(this, '<%= movie._id %>','<%= csrfToken %>')">
                         <% if(movie.hidden){%>
                         <i class="far fa-eye"></i>
                         <% } else {%>
@@ -44,7 +51,7 @@
                         <% } %>
                     </button>
                     <button class="card-link btn btn-danger"
-                        onclick="deleteMovie(this, '<%= movie.id %>','<%= csrfToken %>')"><i
+                        onclick="deleteMovie(this, '<%= movie._id %>','<%= csrfToken %>')"><i
                             class="far fa-trash-alt"></i></button>
                 </div>
                 <% } %>

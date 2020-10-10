@@ -31,12 +31,18 @@
   overflow: auto;
 }
 
-.pinned {
+.badge-container {
   position: absolute;
   left: 0.2%;
   top: 0.2%;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-container .badge {
   font-size: 1.2rem;
+  margin-bottom: 0.2rem;
 }
 
 @media (max-width: 630px) {

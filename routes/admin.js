@@ -52,6 +52,11 @@ router.post(
   adminController.changeMoviePinnedState
 );
 
+router.post(
+  "/change-movie-hidden-state/:id",
+  adminController.changeMovieHiddenState
+);
+
 // other
 router.delete("/delete-movie/:id", adminController.deleteMovie);
 

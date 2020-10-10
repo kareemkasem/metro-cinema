@@ -13,12 +13,15 @@ exports.getMovies = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const MOVIES_PER_PAGE = 4;
 
-    const totalMoviesCount = await Movie.find().countDocuments((err, count) => {
-      return count;
-    });
+    const totalMoviesCount = await Movie.find({ hidden: false }).countDocuments(
+      (err, count) => {
+        return count;
+      }
+    );
 
     const totalPinnedMoviesCount = await Movie.find({
       pinned: true,
+      hidden: false,
     }).countDocuments((err, count) => {
       return count;
     });
@@ -31,7 +34,7 @@ exports.getMovies = async (req, res, next) => {
     }
 
     // sorting movies
-    const pinnedMovies = await Movie.find({ pinned: true })
+    const pinnedMovies = await Movie.find({ pinned: true, hidden: false })
       .skip((page - 1) * MOVIES_PER_PAGE)
       .limit(MOVIES_PER_PAGE);
     const currentPinnedMoviesCount = pinnedMovies.length;
@@ -41,12 +44,12 @@ exports.getMovies = async (req, res, next) => {
       currentPinnedMoviesCount < MOVIES_PER_PAGE &&
       currentPinnedMoviesCount > 0
     ) {
-      unpinnedMovies = await Movie.find({ pinned: false })
+      unpinnedMovies = await Movie.find({ pinned: false, hidden: false })
         .sort({ date: "asc" })
         .skip(0)
         .limit(MOVIES_PER_PAGE - currentPinnedMoviesCount);
     } else if (currentPinnedMoviesCount === 0) {
-      unpinnedMovies = await Movie.find({ pinned: false })
+      unpinnedMovies = await Movie.find({ pinned: false, hidden: false })
         .sort({ date: "asc" })
         .skip((page - 1) * MOVIES_PER_PAGE - totalPinnedMoviesCount)
         .limit(MOVIES_PER_PAGE);
@@ -68,16 +71,9 @@ exports.getMovies = async (req, res, next) => {
 
     movies = movies.map((movie) => {
       return {
-        id: movie._id,
-        title: movie.title,
-        description: movie.description,
-        year: movie.year,
+        ...movie._doc,
         date: moment(movie.date).format("MMM DD YYYY , hh:mm a"),
-        seats: movie.seats,
         seatsAvailable: movie.seats - movie.seatsBooked,
-        imgUrl: movie.imgUrl,
-        pinned: movie.pinned,
-        hidden: movie.hidden,
       };
     });
 

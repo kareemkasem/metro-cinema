@@ -209,16 +209,9 @@ exports.getMovies = async (req, res, next) => {
     // preparing for front end
     movies = movies.map((movie) => {
       return {
-        id: movie._id,
-        title: movie.title,
-        description: movie.description,
-        year: movie.year,
+        ...movie._doc,
         date: moment(movie.date).format("MMM DD YYYY , hh:mm a"),
-        seats: movie.seats,
         seatsAvailable: movie.seats - movie.seatsBooked,
-        imgUrl: movie.imgUrl,
-        pinned: movie.pinned,
-        hidden: movie.hidden,
       };
     });
 
@@ -259,5 +252,17 @@ exports.changeMoviePinnedState = async (req, res, next) => {
     res.status(200).json({ message: "pinned state changed successfully" });
   } catch {
     res.status(500).json({ message: "couldn't change pinned state" });
+  }
+};
+
+exports.changeMovieHiddenState = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const movieToHide = await Movie.findById(id);
+    movieToHide.hidden = !movieToHide.hidden;
+    await movieToHide.save();
+    res.status(200).json({ message: "hidden state changed successfully" });
+  } catch {
+    res.status(500).json({ message: "couldn't change hidden state" });
   }
 };

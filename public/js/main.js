@@ -19,7 +19,7 @@ const changeMoviePinnedState = async (btn, id, csrfToken) => {
     const btnText = btn.innerText;
     const pinnedBadgeDisplay = btn
       .closest(".main-card")
-      .querySelector(".pinned").style.display;
+      .querySelector("#pinned-badge").style.display;
 
     btn.innerText = "....";
 
@@ -31,12 +31,43 @@ const changeMoviePinnedState = async (btn, id, csrfToken) => {
     });
 
     btn.innerText = btnText === "Pin" ? "unPin" : "Pin";
-    btn.closest(".main-card").querySelector(".pinned").style.display =
+    btn.closest(".main-card").querySelector("#pinned-badge").style.display =
       pinnedBadgeDisplay === "none" ? "block" : "none";
   } catch (error) {
     console.log(error);
     document.getElementById("error-alert").innerText =
       "couldn't pin/unpin movie";
+    document.getElementById("error-alert").style.display = "block";
+  }
+};
+
+const changeMovieHiddenState = async (btn, id, csrfToken) => {
+  try {
+    const btnInnerHTML = btn.innerHTML;
+    const hiddenBadgeDisplay = btn
+      .closest(".main-card")
+      .querySelector("#hidden-badge").style.display;
+
+    btn.innerHTML = "....";
+
+    await fetch("/admin/change-movie-hidden-state/" + id, {
+      method: "POST",
+      headers: {
+        "csrf-token": csrfToken,
+      },
+    });
+
+    btn.innerHTML =
+      btnInnerHTML === '<i class="far fa-eye-slash"></i>'
+        ? '<i class="far fa-eye-">'
+        : '<i class="far fa-eye-slash">';
+
+    btn.closest(".main-card").querySelector("#hidden-badge").style.display =
+      hiddenBadgeDisplay === "none" ? "block" : "none";
+  } catch (error) {
+    console.log(error);
+    document.getElementById("error-alert").innerText =
+      "couldn't hide/unhide movie";
     document.getElementById("error-alert").style.display = "block";
   }
 };
