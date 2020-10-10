@@ -13,6 +13,8 @@ router.get("/reset-password", authController.getResetPassword);
 router.get("/reset-password-success", authController.getResetPasswordSuccess);
 router.get("/new-password/:token", authController.getNewPassword);
 router.get("/change-password", userAuthCheck, authController.getChangePassword);
+router.get("/delete-account", authController.getDeleteAccount);
+router.get("/delete-account-success", authController.getDeleteAccountSuccess);
 
 router.post(
   "/signup",
@@ -53,5 +55,7 @@ router.post(
     .withMessage("password must be between 8 and 16 characters"),
   authController.postChangePassword
 );
+
+router.post("/delete-account", authController.postDeleteAccount);
 
 module.exports = router;

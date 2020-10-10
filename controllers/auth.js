@@ -360,3 +360,53 @@ exports.postChangePassword = async (req, res, next) => {
     return redirectWithError();
   }
 };
+
+exports.getDeleteAccount = (req, res, next) => {
+  res.render("auth/delete-account", {
+    pageTitle: "Delete Account",
+    path: "/profile",
+    errorMessage: inputError,
+  });
+  inputError = null;
+};
+
+exports.getDeleteAccountSuccess = (req, res, next) => {
+  res.render("auth/delete-account-success", {
+    pageTitle: "Delete Account Success",
+    path: "/profile",
+  });
+};
+
+exports.postDeleteAccount = async (req, res, next) => {
+  const password = req.body.password;
+
+  const reloadWithError = (msg = "an error occured") => {
+    inputError = msg;
+    res.redirect("/delete-account");
+  };
+
+  try {
+    const doesMatch = await bcrypt.compare(password, req.user.password);
+    if (!doesMatch) {
+      reloadWithError("password is incorrect");
+      return;
+    }
+  } catch (error) {
+    reloadWithError("couldn't check password. pleasy try again");
+    return;
+  }
+
+  try {
+    const userId = req.user._id;
+    await User.findByIdAndDelete(userId);
+  } catch (error) {
+    reloadWithError("couldn't delete user. please try again.");
+    return;
+  }
+
+  req.session.destroy((err) => {
+    err && console.log(err);
+  });
+
+  res.redirect("/delete-account-success");
+};
