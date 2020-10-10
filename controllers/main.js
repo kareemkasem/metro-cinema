@@ -13,15 +13,17 @@ exports.getMovies = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const MOVIES_PER_PAGE = 4;
 
-    const totalMoviesCount = await Movie.find({ hidden: false }).countDocuments(
-      (err, count) => {
-        return count;
-      }
-    );
+    const totalMoviesCount = await Movie.find({
+      hidden: false,
+      endDate: { $gte: new Date() },
+    }).countDocuments((err, count) => {
+      return count;
+    });
 
     const totalPinnedMoviesCount = await Movie.find({
       pinned: true,
       hidden: false,
+      endDate: { $gte: new Date() },
     }).countDocuments((err, count) => {
       return count;
     });
@@ -34,7 +36,11 @@ exports.getMovies = async (req, res, next) => {
     }
 
     // sorting movies
-    const pinnedMovies = await Movie.find({ pinned: true, hidden: false })
+    const pinnedMovies = await Movie.find({
+      pinned: true,
+      hidden: false,
+      endDate: { $gte: new Date() },
+    })
       .skip((page - 1) * MOVIES_PER_PAGE)
       .limit(MOVIES_PER_PAGE);
     const currentPinnedMoviesCount = pinnedMovies.length;
@@ -44,23 +50,31 @@ exports.getMovies = async (req, res, next) => {
       currentPinnedMoviesCount < MOVIES_PER_PAGE &&
       currentPinnedMoviesCount > 0
     ) {
-      unpinnedMovies = await Movie.find({ pinned: false, hidden: false })
-        .sort({ date: "asc" })
+      unpinnedMovies = await Movie.find({
+        pinned: false,
+        hidden: false,
+        endDate: { $gte: new Date() },
+      })
+        .sort({ startDate: "asc" })
         .skip(0)
         .limit(MOVIES_PER_PAGE - currentPinnedMoviesCount);
     } else if (currentPinnedMoviesCount === 0) {
-      unpinnedMovies = await Movie.find({ pinned: false, hidden: false })
-        .sort({ date: "asc" })
+      unpinnedMovies = await Movie.find({
+        pinned: false,
+        hidden: false,
+        endDate: { $gte: new Date() },
+      })
+        .sort({ startDate: "asc" })
         .skip((page - 1) * MOVIES_PER_PAGE - totalPinnedMoviesCount)
         .limit(MOVIES_PER_PAGE);
     }
 
     // preparing for front end
     unpinnedMovies.sort((a, b) => {
-      // this step is necessary for the views to be sorted according to nearest date
-      if (a.date > b.date) {
+      // this step is necessary for the views to be sorted according to nearest startDate
+      if (a.startDate > b.startDate) {
         return 1;
-      } else if (a.date < b.date) {
+      } else if (a.startDate < b.startDate) {
         return -1;
       } else {
         return 0;
@@ -72,7 +86,8 @@ exports.getMovies = async (req, res, next) => {
     movies = movies.map((movie) => {
       return {
         ...movie._doc,
-        date: moment(movie.date).format("MMM DD YYYY , hh:mm a"),
+        startDate: moment(movie.startDate).format("MMM DD YYYY , hh:mm a"),
+        endDate: moment(movie.endDate).format("MMM DD YYYY"),
         seatsAvailable: movie.seats - movie.seatsBooked,
       };
     });

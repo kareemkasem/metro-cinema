@@ -25,7 +25,7 @@ router.post(
     existValidator("title").trim(),
     existValidator("description").trim(),
     existValidator("year").trim(),
-    existValidator("date"),
+    existValidator("startDate"),
     existValidator("seats")
       .isInt({ min: 20, max: 200 })
       .withMessage("seats offered should be between 20 and 200"),
@@ -39,7 +39,7 @@ router.post(
     existValidator("title").trim(),
     existValidator("description").trim(),
     existValidator("year").trim(),
-    existValidator("date"),
+    existValidator("startDate"),
     existValidator("seats")
       .isInt({ min: 20, max: 200 })
       .withMessage("seats offered should be between 20 and 200"),

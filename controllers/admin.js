@@ -18,14 +18,24 @@ exports.getAddMovie = (req, res, next) => {
 exports.getEditMovie = async (req, res, next) => {
   const id = req.params.id;
   const movieToEdit = await Movie.findById(id);
+  const {
+    title,
+    description,
+    year,
+    startDate,
+    endDate,
+    imgUrl,
+    seats,
+  } = movieToEdit;
 
   const oldInput = {
-    title: movieToEdit.title,
-    description: movieToEdit.description,
-    year: movieToEdit.year,
-    date: moment(movieToEdit.date).format("YYYY-MM-DDThh:mm"), //this formatting is required for native html date-time local input
-    imgUrl: movieToEdit.imgUrl,
-    seats: movieToEdit.seats,
+    title,
+    description,
+    year,
+    startDate: moment(startDate).format("YYYY-MM-DDThh:mm"), //this formatting is required for native html startDate-time local input
+    endDate: moment(endDate).format("YYYY-MM-DD"),
+    imgUrl,
+    seats,
   };
 
   res.render("admin/add-movie", {
@@ -38,7 +48,15 @@ exports.getEditMovie = async (req, res, next) => {
 };
 
 exports.postAddMovie = (req, res, next) => {
-  let { title, description, year, date, seats, imgUrl } = req.body;
+  let {
+    title,
+    description,
+    year,
+    startDate,
+    endDate,
+    seats,
+    imgUrl,
+  } = req.body;
   const img = req.file;
 
   if (!img && !imgUrl) {
@@ -50,7 +68,8 @@ exports.postAddMovie = (req, res, next) => {
         title,
         description,
         year,
-        date,
+        startDate,
+        endDate,
         seats,
       },
       id: null,
@@ -70,7 +89,8 @@ exports.postAddMovie = (req, res, next) => {
         title,
         description,
         year,
-        date,
+        startDate,
+        endDate,
         imgUrl,
         seats,
       },
@@ -84,7 +104,8 @@ exports.postAddMovie = (req, res, next) => {
     description,
     year,
     imgUrl,
-    date,
+    startDate,
+    endDate,
     seats,
   });
 
@@ -100,7 +121,15 @@ exports.postAddMovie = (req, res, next) => {
 };
 
 exports.postEditMovie = async (req, res, next) => {
-  let { title, description, year, date, seats, imgUrl } = req.body;
+  let {
+    title,
+    description,
+    year,
+    startDate,
+    endDate,
+    seats,
+    imgUrl,
+  } = req.body;
   const id = req.params.id;
   const img = req.file;
 
@@ -113,7 +142,8 @@ exports.postEditMovie = async (req, res, next) => {
         title,
         description,
         year,
-        date,
+        startDate,
+        endDate,
         seats,
       },
       id,
@@ -133,7 +163,8 @@ exports.postEditMovie = async (req, res, next) => {
         title,
         description,
         year,
-        date,
+        startDate,
+        endDate,
         imgUrl,
         seats,
       },
@@ -147,7 +178,8 @@ exports.postEditMovie = async (req, res, next) => {
   updatedMovie.title = title;
   updatedMovie.description = description;
   updatedMovie.year = year;
-  updatedMovie.date = date;
+  updatedMovie.startDate = startDate;
+  updatedMovie.endDate = endDate;
   updatedMovie.imgUrl = imgUrl;
   updatedMovie.seats = seats;
   updatedMovie
@@ -196,22 +228,37 @@ exports.getMovies = async (req, res, next) => {
       currentPinnedMoviesCount > 0
     ) {
       unpinnedMovies = await Movie.find({ pinned: false })
+        .sort({ startDate: "asc" })
         .skip(0)
         .limit(MOVIES_PER_PAGE - currentPinnedMoviesCount);
     } else if (currentPinnedMoviesCount === 0) {
       unpinnedMovies = await Movie.find({ pinned: false })
+        .sort({ startDate: "asc" })
         .skip((page - 1) * MOVIES_PER_PAGE - totalPinnedMoviesCount)
         .limit(MOVIES_PER_PAGE);
     }
 
+    // preparing for front end
+    unpinnedMovies.sort((a, b) => {
+      // this step is necessary for the views to be sorted according to nearest startDate
+      if (a.startDate > b.startDate) {
+        return 1;
+      } else if (a.startDate < b.startDate) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
     let movies = [...pinnedMovies, ...unpinnedMovies];
 
-    // preparing for front end
     movies = movies.map((movie) => {
       return {
         ...movie._doc,
-        date: moment(movie.date).format("MMM DD YYYY , hh:mm a"),
+        startDate: moment(movie.startDate).format("MMM DD YYYY , hh:mm a"),
+        endDate: moment(movie.endDate).format("MMM DD YYYY"),
         seatsAvailable: movie.seats - movie.seatsBooked,
+        pastEndDate: movie.endDate < Date.now(),
       };
     });
 

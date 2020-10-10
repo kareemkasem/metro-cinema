@@ -7,7 +7,8 @@ const movieSchema = new mongoose.Schema({
   description: String,
   year: String,
   imgUrl: String,
-  date: Date,
+  startDate: Date,
+  endDate: Date,
   pinned: {
     type: Boolean,
     required: false,

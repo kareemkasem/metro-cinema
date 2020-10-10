@@ -1,5 +1,8 @@
 <div class="card m-2 main-card">
     <div class="badge-container">
+        <span class="badge badge-danger" id="hidden-badge" style="display: <%= movie.pastEndDate ? 'block' : 'none' %>">
+            end date reached
+        </span>
         <span class="badge badge-warning" id="pinned-badge" style="display: <%= movie.pinned ? 'block' : 'none' %>">
             pinned!
         </span>
@@ -23,26 +26,30 @@
                     <span class="text-primary">Year : </span><%= movie.year %>
                 </li>
                 <li class="list-group-item">
-                    <span class="text-primary">Date : </span><%= movie.date %>
+                    <span class="text-primary">Starts : </span><%= movie.startDate %>
                 </li>
                 <li class="list-group-item">
-                    <span class="text-primary">Seats : </span><%= movie.seatsAvailable %> of
+                    <span class="text-primary">Ends : </span><%= movie.endDate %>
+                </li>
+                <li class="list-group-item">
+                    <span class="text-primary">Seats Available: </span><%= movie.seatsAvailable %> <span
+                        class="text-primary">/</span>
                     <%= movie.seats %>
                 </li>
             </ul>
             <div class="card-body">
                 <% if(path === "/movies"){ %>
-                <a href="/book-movie/<%= movie._id %>" class="card-link btn btn-primary btn-block">Get your
+                <a href="/book-movie/<%= movie._id %>" class="btn btn-primary btn-block">Get your
                     ticket</a>
                 <% } else{  %>
-                <div class="row justify-content-between">
-                    <button class="card-link btn btn-warning"
+                <div class="row justify-content-center admin-actions">
+                    <button class="btn btn-warning"
                         onclick="changeMoviePinnedState(this, '<%= movie._id %>','<%= csrfToken %>')">
                         <%= movie.pinned ? "unPin" : "Pin"%>
                     </button>
-                    <a href=" /admin/edit-movie/<%= movie._id %>" class="card-link btn btn-primary"><i
+                    <a href=" /admin/edit-movie/<%= movie._id %>" class="btn btn-primary"><i
                             class="far fa-edit"></i></a>
-                    <button class="card-link btn btn-dark"
+                    <button class="btn btn-dark"
                         onclick="changeMovieHiddenState(this, '<%= movie._id %>','<%= csrfToken %>')">
                         <% if(movie.hidden){%>
                         <i class="far fa-eye"></i>

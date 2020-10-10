@@ -1,6 +1,5 @@
 // imports ....................................................
 const mongoose = require("mongoose");
-const { stringify } = require("uuid");
 // ............................................................
 
 const userSchema = new mongoose.Schema({
@@ -15,13 +14,13 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: false,
   },
-  movies: {
+  bookings: {
     required: false,
     default: [],
     type: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Movie",
+        ref: "Bookings",
       },
     ],
   },
