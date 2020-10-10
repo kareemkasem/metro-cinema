@@ -16,6 +16,7 @@ exports.getSetPassword = (req, res, next) => {
     pageTitle: "Set Password",
     errorMessage: inputError,
   });
+  inputError = null;
 };
 
 exports.getAuth = (req, res, next) => {
@@ -23,10 +24,10 @@ exports.getAuth = (req, res, next) => {
     pageTitle: "Auth",
     errorMessage: inputError,
   });
+  inputError = null;
 };
 
 exports.postSetPassword = async (req, res, next) => {
-  inputError = null;
   const reloadWithError = (msg = "an error occured") => {
     inputError = msg;
     res.redirect("/admin/set-password");

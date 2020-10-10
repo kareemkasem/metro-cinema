@@ -247,39 +247,21 @@ exports.postResetPassword = async (req, res, next) => {
 
 exports.getNewPassword = async (req, res, next) => {
   const token = req.params.token;
-  const error = inputError;
 
-  const render = (errorMessage = "something went wrong") => {
-    res.render("auth/new-password", {
-      pageTitle: "new password",
-      path: "/new-password",
-      errorMessage,
-      token,
-    });
-  };
+  res.render("auth/new-password", {
+    pageTitle: "new password",
+    path: "/new-password",
+    errorMessage: inputError,
+    token,
+  });
 
-  if (error) {
-    render(error);
-    return;
-  }
-
-  try {
-    const user = await User.findOne({ token });
-    if (!user) {
-      render("token not found. please make a new request", null);
-    } else {
-      render(null, token);
-    }
-  } catch (error) {
-    render();
-  }
+  inputError = null;
 };
 
 exports.postNewPassword = async (req, res, next) => {
   const token = req.params.token;
   const { password, retypePassword } = req.body;
   const errors = validationResult(req);
-  inputError = null;
 
   if (!errors.isEmpty()) {
     inputError = errors.array()[0].msg;
@@ -329,11 +311,11 @@ exports.getChangePassword = (req, res, next) => {
     path: "/profile",
     errorMessage: inputError,
   });
+  inputError = null;
 };
 
 exports.postChangePassword = async (req, res, next) => {
   const { currentPassword, newPassword, retypeNewPassword } = req.body;
-  inputError = null;
   const validationErrors = validationResult(req);
 
   const redirectWithError = (msg = "an error occured") => {
