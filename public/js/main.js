@@ -16,7 +16,8 @@ const deleteMovie = async (btn, id, csrfToken) => {
 
 const changeMoviePinnedState = async (btn, id, csrfToken) => {
   try {
-    const btnText = btn.innerText;
+    const btnHTML = btn.innerHTML;
+    const btnTitle = btn.title;
     const pinnedBadgeDisplay = btn
       .closest(".main-card")
       .querySelector("#pinned-badge").style.display;
@@ -30,7 +31,11 @@ const changeMoviePinnedState = async (btn, id, csrfToken) => {
       },
     });
 
-    btn.innerText = btnText === "Pin" ? "unPin" : "Pin";
+    btn.title = btnTitle === "Pin" ? "UnPin" : "Pin";
+    btn.innerHTML =
+      btnHTML === '<i class="far fa-thumbs-up"></i>'
+        ? '<i class="far fa-thumbs-down"></i>'
+        : '<i class="far fa-thumbs-up"></i>';
     btn.closest(".main-card").querySelector("#pinned-badge").style.display =
       pinnedBadgeDisplay === "none" ? "block" : "none";
   } catch (error) {
@@ -44,6 +49,7 @@ const changeMoviePinnedState = async (btn, id, csrfToken) => {
 const changeMovieHiddenState = async (btn, id, csrfToken) => {
   try {
     const btnInnerHTML = btn.innerHTML;
+    const btnTitle = btn.title;
     const hiddenBadgeDisplay = btn
       .closest(".main-card")
       .querySelector("#hidden-badge").style.display;
@@ -57,6 +63,7 @@ const changeMovieHiddenState = async (btn, id, csrfToken) => {
       },
     });
 
+    btn.title = btnTitle === "Hide" ? "UnHide" : "Hide";
     btn.innerHTML =
       btnInnerHTML === '<i class="far fa-eye-slash"></i>'
         ? '<i class="far fa-eye-">'

@@ -1,6 +1,7 @@
 <div class="card m-2 main-card">
     <div class="badge-container">
-        <span class="badge badge-danger" id="hidden-badge" style="display: <%= movie.pastEndDate ? 'block' : 'none' %>">
+        <span class="badge badge-danger" id="end-date-reached-badge"
+            style="display: <%= movie.pastEndDate ? 'block' : 'none' %>">
             end date reached
         </span>
         <span class="badge badge-warning" id="pinned-badge" style="display: <%= movie.pinned ? 'block' : 'none' %>">
@@ -43,13 +44,19 @@
                     ticket</a>
                 <% } else{  %>
                 <div class="row justify-content-center admin-actions">
-                    <button class="btn btn-warning"
+                    <button class="btn btn-warning" title="<%= movie.pinned ? 'UnPin' : 'Pin' %>"
                         onclick="changeMoviePinnedState(this, '<%= movie._id %>','<%= csrfToken %>')">
-                        <%= movie.pinned ? "unPin" : "Pin"%>
+                        <% if(movie.pinned){%>
+                        <i class="far fa-thumbs-down"></i>
+                        <% } else {%>
+                        <i class="far fa-thumbs-up"></i>
+                        <% } %>
                     </button>
-                    <a href=" /admin/edit-movie/<%= movie._id %>" class="btn btn-primary"><i
-                            class="far fa-edit"></i></a>
-                    <button class="btn btn-dark"
+                    <button class="btn btn-primary" title="Edit">
+                        <a href=" /admin/edit-movie/<%= movie._id %>" class="normal-link" title="Edit">
+                            <i class="far fa-edit"></i></a>
+                    </button>
+                    <button class="btn btn-dark" title="<%= movie.hidden ? 'UnHide' : 'Hide' %>"
                         onclick="changeMovieHiddenState(this, '<%= movie._id %>','<%= csrfToken %>')">
                         <% if(movie.hidden){%>
                         <i class="far fa-eye"></i>
@@ -57,7 +64,7 @@
                         <i class="far fa-eye-slash"></i>
                         <% } %>
                     </button>
-                    <button class="card-link btn btn-danger"
+                    <button class="card-link btn btn-danger" title="delete"
                         onclick="deleteMovie(this, '<%= movie._id %>','<%= csrfToken %>')"><i
                             class="far fa-trash-alt"></i></button>
                 </div>
