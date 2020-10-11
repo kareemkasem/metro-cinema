@@ -23,7 +23,7 @@ const movieSchema = new mongoose.Schema({
       },
     ],
     required: false,
-    default: 0,
+    default: [],
   },
   hidden: {
     type: Boolean,

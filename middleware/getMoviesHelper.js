@@ -66,11 +66,17 @@ module.exports = async (req, res, filters, path) => {
     let movies = [...pinnedMovies, ...unpinnedMovies];
 
     movies = movies.map((movie) => {
+      const todayBookedSeats =
+        movie.seatsBooked.find(
+          (el) =>
+            moment(el.date).format("DD MM YYYY") ===
+            moment().format("DD MM YYYY")
+        ).number || 0;
       return {
         ...movie._doc,
         startDate: moment(movie.startDate).format("MMM DD YYYY , hh:mm a"),
         endDate: moment(movie.endDate).format("MMM DD YYYY"),
-        seatsAvailable: movie.seats - movie.seatsBooked,
+        seatsAvailable: movie.seats - todayBookedSeats,
         pastEndDate: movie.endDate < Date.now(),
       };
     });
