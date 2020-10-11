@@ -1,0 +1,24 @@
+<div class="row justify-content-center admin-actions">
+    <button class="btn btn-warning" title="<%= movie.pinned ? 'UnPin' : 'Pin' %>"
+        onclick="changeMoviePinnedState(this, '<%= movie._id %>','<%= csrfToken %>')">
+        <% if(movie.pinned){%>
+        <i class="far fa-thumbs-down"></i>
+        <% } else {%>
+        <i class="far fa-thumbs-up"></i>
+        <% } %>
+    </button>
+    <button class="btn btn-primary" title="Edit">
+        <a href=" /admin/edit-movie/<%= movie._id %>" class="normal-link" title="Edit">
+            <i class="far fa-edit"></i></a>
+    </button>
+    <button class="btn btn-dark" title="<%= movie.hidden ? 'UnHide' : 'Hide' %>"
+        onclick="changeMovieHiddenState(this, '<%= movie._id %>','<%= csrfToken %>')">
+        <% if(movie.hidden){%>
+        <i class="far fa-eye"></i>
+        <% } else {%>
+        <i class="far fa-eye-slash"></i>
+        <% } %>
+    </button>
+    <button class="card-link btn btn-danger" title="delete"
+        onclick="deleteMovie(this, '<%= movie._id %>','<%= csrfToken %>')"><i class="far fa-trash-alt"></i></button>
+</div>

@@ -1,0 +1,12 @@
+<div class="badge-container">
+    <span class="badge badge-danger" id="end-date-reached-badge"
+        style="display: <%= movie.pastEndDate ? 'block' : 'none' %>">
+        End date reached
+    </span>
+    <span class="badge badge-warning" id="pinned-badge" style="display: <%= movie.pinned ? 'block' : 'none' %>">
+        pinned!
+    </span>
+    <span class="badge badge-dark" id="hidden-badge" style="display: <%= movie.hidden ? 'block' : 'none' %>">
+        Hidden
+    </span>
+</div>
