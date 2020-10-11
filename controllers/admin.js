@@ -1,9 +1,14 @@
 // imports ........................................
 const { validationResult } = require("express-validator");
 const moment = require("moment");
+const getMoviesHelper = require("../middleware/getMoviesHelper");
 
 const Movie = require("../models/movie");
 // ................................................
+
+exports.getMovies = (req, res, next) => {
+  getMoviesHelper(req, res, {}, "/admin/movies");
+};
 
 exports.getAddMovie = (req, res, next) => {
   res.render("admin/add-movie", {
@@ -193,90 +198,15 @@ exports.postEditMovie = async (req, res, next) => {
     });
 };
 
-exports.getMovies = async (req, res, next) => {
+exports.changeMovieHiddenState = async (req, res, next) => {
+  const id = req.params.id;
   try {
-    // numbers
-    const page = parseInt(req.query.page) || 1;
-    const MOVIES_PER_PAGE = 4;
-
-    const totalMoviesCount = await Movie.find().countDocuments((err, count) => {
-      return count;
-    });
-
-    const totalPinnedMoviesCount = await Movie.find({
-      pinned: true,
-    }).countDocuments((err, count) => {
-      return count;
-    });
-
-    const pageCount = Math.ceil(totalMoviesCount / MOVIES_PER_PAGE);
-
-    let pageNumbers = [];
-    for (let i = 1; i <= pageCount; i++) {
-      pageNumbers.push(i);
-    }
-
-    // sorting movies
-    const pinnedMovies = await Movie.find({ pinned: true })
-      .skip((page - 1) * MOVIES_PER_PAGE)
-      .limit(MOVIES_PER_PAGE);
-    const currentPinnedMoviesCount = pinnedMovies.length;
-
-    let unpinnedMovies = [];
-    if (
-      currentPinnedMoviesCount < MOVIES_PER_PAGE &&
-      currentPinnedMoviesCount > 0
-    ) {
-      unpinnedMovies = await Movie.find({ pinned: false })
-        .sort({ startDate: "asc" })
-        .skip(0)
-        .limit(MOVIES_PER_PAGE - currentPinnedMoviesCount);
-    } else if (currentPinnedMoviesCount === 0) {
-      unpinnedMovies = await Movie.find({ pinned: false })
-        .sort({ startDate: "asc" })
-        .skip((page - 1) * MOVIES_PER_PAGE - totalPinnedMoviesCount)
-        .limit(MOVIES_PER_PAGE);
-    }
-
-    // preparing for front end
-    unpinnedMovies.sort((a, b) => {
-      // this step is necessary for the views to be sorted according to nearest startDate
-      if (a.startDate > b.startDate) {
-        return 1;
-      } else if (a.startDate < b.startDate) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
-    let movies = [...pinnedMovies, ...unpinnedMovies];
-
-    movies = movies.map((movie) => {
-      return {
-        ...movie._doc,
-        startDate: moment(movie.startDate).format("MMM DD YYYY , hh:mm a"),
-        endDate: moment(movie.endDate).format("MMM DD YYYY"),
-        seatsAvailable: movie.seats - movie.seatsBooked,
-        pastEndDate: movie.endDate < Date.now(),
-      };
-    });
-
-    // rendering
-    res.render("main/movies", {
-      pageTitle: "Movies",
-      path: "/admin/movies",
-      movies,
-      previousArrow: pageNumbers[page - 3], // add +1 to each and it will make sense
-      previous: pageNumbers[page - 2],
-      currentPage: pageNumbers[page - 1],
-      next: pageNumbers[page],
-      nextArrow: pageNumbers[page + 1],
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500);
-    next(err);
+    const movieToHide = await Movie.findById(id);
+    movieToHide.hidden = !movieToHide.hidden;
+    await movieToHide.save();
+    res.status(200).json({ message: "hidden state changed successfully" });
+  } catch {
+    res.status(500).json({ message: "couldn't change hidden state" });
   }
 };
 
@@ -299,17 +229,5 @@ exports.changeMoviePinnedState = async (req, res, next) => {
     res.status(200).json({ message: "pinned state changed successfully" });
   } catch {
     res.status(500).json({ message: "couldn't change pinned state" });
-  }
-};
-
-exports.changeMovieHiddenState = async (req, res, next) => {
-  const id = req.params.id;
-  try {
-    const movieToHide = await Movie.findById(id);
-    movieToHide.hidden = !movieToHide.hidden;
-    await movieToHide.save();
-    res.status(200).json({ message: "hidden state changed successfully" });
-  } catch {
-    res.status(500).json({ message: "couldn't change hidden state" });
   }
 };
