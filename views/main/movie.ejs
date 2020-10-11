@@ -6,8 +6,8 @@
         </div>
         <div class="col-12 col-sm-6 align-items-center content">
             <div class="card-body">
-                <h5 class="card-title">
-                    <%= movie.title.length > 39 ? movie.title.substring(0,36) + "..." : movie.title %>
+                <h5 class="card-title" title="<%= movie.title %>">
+                    <%= movie.title.length > 38 ? movie.title.substring(0,35) + "..." : movie.title %>
                 </h5>
                 <p class="card-text description"><%= movie.description %></p>
             </div>
