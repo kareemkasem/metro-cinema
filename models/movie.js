@@ -1,5 +1,6 @@
 // imports ....................................................
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 //.............................................................
 
 const movieSchema = new mongoose.Schema({
@@ -18,8 +19,23 @@ const movieSchema = new mongoose.Schema({
   seatsBooked: {
     type: [
       {
+        date: String, // format MM DD YYYY
         number: Number,
-        date: Date,
+      },
+    ],
+    required: false,
+    default: [],
+  },
+  bookings: {
+    type: [
+      {
+        date: String, // format MM DD YYYY
+        users: [
+          {
+            type: ObjectId,
+            ref: "User",
+          },
+        ],
       },
     ],
     required: false,

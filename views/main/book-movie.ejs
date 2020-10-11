@@ -5,20 +5,23 @@
     <%- include("../include/nav.ejs") %>
     <div class="container">
         <div class="row justify-content-center">
-            <form class="col-12 col-md-6" autocomplete="off" method="POST" action="/book-movie">
+            <form class="col-12 col-md-6" autocomplete="off" method="POST" action="/book-movie/<%= movieId %>">
                 <% if(errorMessage){ %>
-                <div class="alert alert-danger text-center my-3" role="alert">
+                <div class=" alert alert-danger text-center my-3" role="alert">
                     <%= errorMessage %>
                 </div>
                 <% } %>
+                <h5 class="my-3">
+                    <span class="text-primary">Movie: </span> <%= movieTitle %>
+                </h5>
+                <h5 class="my-3">
+                    <span class="text-primary">Time: </span> <%= time %>
+                </h5>
                 <div class="form-group my-3">
                     <label for="date">Date</label>
                     <input type="date" class="form-control" id="date" name="date"
                         value="<%= oldInput && oldInput.date %>" min="<%= startDate %>" max="<%= endDate %>" />
                 </div>
-                <h5 class="my-3">
-                    <span class="text-primary">Time: </span> <%= time %>
-                </h5>
                 <div class="alert alert-primary my-3">
                     There is supposed to be a payment method here using Stripe Payments (which is very easy to implement
                     by the
@@ -28,7 +31,6 @@
                     a demo out.
                 </div>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                <input type="hidden" name="movieID" value="<%= movieId %>">
                 <button type="submit" class="btn btn-primary btn-block btn-lg">
                     Get Ticket
                 </button>

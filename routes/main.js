@@ -20,5 +20,6 @@ router.post(
     .withMessage("please provide a name"),
   mainController.postChangeName
 );
+router.post("/book-movie/:id", userAuthCheck, mainController.postBookMovie);
 
 module.exports = router;
