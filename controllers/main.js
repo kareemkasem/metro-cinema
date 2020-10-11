@@ -1,6 +1,8 @@
 // imports .................................................
 const { validationResult } = require("express-validator");
 const getMoviesHelper = require("../middleware/getMoviesHelper");
+const Movie = require("../models/movie");
+const moment = require("moment");
 // .........................................................
 
 let inputError;
@@ -52,4 +54,32 @@ exports.postChangeName = async (req, res, next) => {
     inputError = "an error occured";
     return res.redirect("/change-name");
   }
+};
+
+exports.getBookMovie = async (req, res, next) => {
+  const movieId = req.params.id;
+
+  try {
+    const movie = await Movie.findById(movieId);
+    let { startDate, endDate } = movie;
+    const time = moment(startDate).format("hh:mm");
+    startDate = moment(startDate).format("YYYY-MM-DD");
+    endDate = moment(endDate).format("YYYY-MM-DD");
+    res.render("main/book-movie", {
+      path: "/bookings",
+      pageTitle: "Book Movie",
+      errorMessage: inputError,
+      oldInput: null,
+      startDate,
+      endDate,
+      time,
+      movieId,
+    });
+  } catch (error) {
+    console.log(error);
+    inputError = "an error occured. please try again.";
+    redirect("/book-movie");
+  }
+
+  inputError = null;
 };

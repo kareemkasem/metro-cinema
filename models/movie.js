@@ -16,7 +16,12 @@ const movieSchema = new mongoose.Schema({
   },
   seats: Number,
   seatsBooked: {
-    type: Number,
+    type: [
+      {
+        number: Number,
+        date: Date,
+      },
+    ],
     required: false,
     default: 0,
   },

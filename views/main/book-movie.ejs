@@ -1,0 +1,38 @@
+<%- include("../include/top.ejs") %>
+</head>
+
+<body>
+    <%- include("../include/nav.ejs") %>
+    <div class="container">
+        <div class="row justify-content-center">
+            <form class="col-12 col-md-6" autocomplete="off" method="POST" action="/book-movie">
+                <% if(errorMessage){ %>
+                <div class="alert alert-danger text-center my-3" role="alert">
+                    <%= errorMessage %>
+                </div>
+                <% } %>
+                <div class="form-group my-3">
+                    <label for="date">Date</label>
+                    <input type="date" class="form-control" id="date" name="date"
+                        value="<%= oldInput && oldInput.date %>" min="<%= startDate %>" max="<%= endDate %>" />
+                </div>
+                <h5 class="my-3">
+                    <span class="text-primary">Time: </span> <%= time %>
+                </h5>
+                <div class="alert alert-primary my-3">
+                    There is supposed to be a payment method here using Stripe Payments (which is very easy to implement
+                    by the
+                    way), but I decided not to include it.
+                    This is not yet a real production app and It would be super inconvienent to ask for credit card info
+                    to try
+                    a demo out.
+                </div>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <input type="hidden" name="movieID" value="<%= movieId %>">
+                <button type="submit" class="btn btn-primary btn-block btn-lg">
+                    Get Ticket
+                </button>
+            </form>
+        </div>
+    </div>
+    <%- include("../include/bottom.ejs") %>

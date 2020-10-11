@@ -11,6 +11,7 @@ const router = express.Router();
 router.get("/movies", mainController.getMovies);
 router.get("/profile", userAuthCheck, mainController.getProfile);
 router.get("/change-name", userAuthCheck, mainController.getChangeName);
+router.get("/book-movie/:id", userAuthCheck, mainController.getBookMovie);
 router.post(
   "/change-name",
   userAuthCheck,
