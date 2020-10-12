@@ -92,13 +92,16 @@ exports.postBookMovie = async (req, res, next) => {
 
   const reloadWithError = (msg = "an error occured") => {
     inputError = msg;
-    res.redirect("/book-movie");
+    res.redirect("/book-movie/" + movieId);
   };
 
   try {
     const movie = await Movie.findById(movieId);
 
-    if (movie.bookings.total >= movie.seats) {
+    const bookingsForDate = movie.bookings.find((x) => x.date === dateStr);
+    const takenSeats = bookingsForDate ? bookingsForDate.total : 0;
+
+    if (takenSeats >= movie.seats) {
       return reloadWithError("seats full, try another date");
     }
 
