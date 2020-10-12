@@ -62,7 +62,7 @@ exports.getBookMovie = async (req, res, next) => {
   try {
     const movie = await Movie.findById(movieId);
     let { startDate, endDate } = movie;
-    const time = moment(startDate).format("hh:mm");
+    const time = moment(startDate).format("hh:mm a");
     startDate = moment(startDate).format("YYYY-MM-DD");
     endDate = moment(endDate).format("YYYY-MM-DD");
     res.render("main/book-movie", {
@@ -88,7 +88,7 @@ exports.getBookMovie = async (req, res, next) => {
 exports.postBookMovie = async (req, res, next) => {
   const movieId = req.params.id;
   const date = req.body.date;
-  const dateStr = moment(date).format("MM DD YYYY");
+  const dateStr = moment(date).format("MMM DD YYYY");
 
   const reloadWithError = (msg = "an error occured") => {
     inputError = msg;

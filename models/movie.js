@@ -19,7 +19,7 @@ const movieSchema = new mongoose.Schema({
   bookings: {
     type: [
       {
-        date: String, // format MM DD YYYY
+        date: String, // format MMM DD YYYY
         users: [
           {
             type: ObjectId,
