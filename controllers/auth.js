@@ -9,14 +9,9 @@ const sendgridTransport = require("nodemailer-sendgrid-transport");
 
 const mailTransporter = nodemailer.createTransport(
   sendgridTransport({
-    auth: {
-      api_key:
-        "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",
-    },
+    auth: { api_key: process.env.SENDGRID_API_KEY },
   })
 );
-
-const ADMIN_EMAIL = "kariimkasem@gmail.com";
 
 const signIn = (req, res, user) => {
   req.session.user = user;
@@ -105,7 +100,7 @@ exports.postSignUp = async (req, res, next) => {
     // sending a confirmation email
     try {
       await mailTransporter.sendMail({
-        from: ADMIN_EMAIL,
+        from: process.env.ADMIN_EMAIL,
         to: email,
         subject: "signup confirmation",
         html: `
@@ -226,7 +221,7 @@ exports.postResetPassword = async (req, res, next) => {
         }
         res.redirect("/reset-password-success");
         mailTransporter.sendMail({
-          from: ADMIN_EMAIL,
+          from: process.env.ADMIN_EMAIL,
           to: email,
           subject: "password reset",
           html: `

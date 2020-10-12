@@ -16,11 +16,6 @@ const Admin = require("./models/admin");
 const adminAuthCheck = require("./middleware/adminAuthCheck");
 //............................................................
 
-// vars
-const MONGO_PASS = "xLhv1yBVM1GHQCZH";
-const MONGO_DB_NAME = "cluster0";
-const MONGO_URI = `mongodb+srv://kareem:${MONGO_PASS}@cluster0.z7c8y.mongodb.net/${MONGO_DB_NAME}?retryWrites=true&w=majority`;
-
 // configs
 const app = express();
 app.set("view engine", "ejs");
@@ -51,14 +46,14 @@ app.use(multer({ storage: multerStorage }).single("img"));
 
 // sessions
 const sessionStore = new mongodbStore({
-  uri: MONGO_URI,
+  uri: process.env.MONGO_URI,
   collection: "sessions",
 });
 app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: "imsonervousdoingthis",
+    secret: process.env.SESSION_SECRET,
     store: sessionStore,
   })
 );
@@ -105,9 +100,12 @@ app.use(async (req, res, next) => {
 
 //init
 mongoose
-  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
-    app.listen(8000);
+    app.listen(process.env.PORT || 8000);
   })
   .catch((err) => {
     console.log(err);
