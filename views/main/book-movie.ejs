@@ -5,7 +5,7 @@
     <%- include("../include/nav.ejs") %>
     <div class="container">
         <div class="row justify-content-center">
-            <form class="col-12 col-md-6" autocomplete="off" method="POST" action="/book-movie/<%= movieId %>">
+            <form class="col-12 col-lg-6" autocomplete="off" method="POST" action="/book-movie/<%= movieId %>">
                 <% if(errorMessage){ %>
                 <div class=" alert alert-danger text-center my-3" role="alert">
                     <%= errorMessage %>
@@ -17,10 +17,25 @@
                 <h5 class="my-3">
                     <span class="text-primary">Time: </span> <%= time %>
                 </h5>
-                <div class="form-group my-3">
-                    <label for="date">Date</label>
-                    <input type="date" class="form-control" id="date" name="date"
-                        value="<%= oldInput && oldInput.date %>" min="<%= startDate %>" max="<%= endDate %>" />
+                <div class="row my-3 align-items-end">
+                    <div class="col-10">
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" class="form-control" id="date" name="date"
+                                value="<%= oldInput && oldInput.date %>" min="<%= startDate %>" max="<%= endDate %>" />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <button class="btn btn-primary" onclick="()=> {console.log('clicked')}">Check</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-succees my-3" style="display:none;" id="date-checked-available">
+                    X number of seats available in that date.
+                </div>
+                <div class="alert alert-danger my-3" style="display: none;" id="date-checked-unavailable">
+                    All seats are booked for this date.
                 </div>
                 <div class="alert alert-primary my-3">
                     There is supposed to be a payment method here using Stripe Payments (which is very easy to implement

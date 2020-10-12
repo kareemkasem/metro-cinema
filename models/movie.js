@@ -16,16 +16,6 @@ const movieSchema = new mongoose.Schema({
     default: false,
   },
   seats: Number,
-  seatsBooked: {
-    type: [
-      {
-        date: String, // format MM DD YYYY
-        number: Number,
-      },
-    ],
-    required: false,
-    default: [],
-  },
   bookings: {
     type: [
       {
@@ -36,6 +26,10 @@ const movieSchema = new mongoose.Schema({
             ref: "User",
           },
         ],
+        total: {
+          type: Number,
+          default: 0,
+        },
       },
     ],
     required: false,

@@ -87,8 +87,8 @@ exports.getBookMovie = async (req, res, next) => {
 
 exports.postBookMovie = async (req, res, next) => {
   const movieId = req.params.id;
-  let date = req.body.date;
-  date = moment(date).format("MM DD YYYY");
+  const date = req.body.date;
+  const dateStr = moment(date).format("MM DD YYYY");
 
   const reloadWithError = (msg = "an error occured") => {
     inputError = msg;
@@ -98,20 +98,13 @@ exports.postBookMovie = async (req, res, next) => {
   try {
     const movie = await Movie.findById(movieId);
 
-    const todayBookedSeats = movie.seatsBooked.find(
-      (el) => el.date === moment().format("MM DD YYYY")
-    );
-    const todayBookedSeatsNumber = todayBookedSeats
-      ? todayBookedSeats.number
-      : 0;
-
-    if (todayBookedSeatsNumber >= movie.seats) {
+    if (movie.bookings.total >= movie.seats) {
       return reloadWithError("seats full, try another date");
     }
 
     // update user bookings
     const user = req.user;
-    const newBookedEntry = { name: movie.title, date: new Date(date) };
+    const newBookedEntry = { name: movie.title, date };
     const alreadyBookd = user.bookings.indexOf(newBookedEntry) !== -1;
     if (alreadyBookd) {
       return reloadWithError("Already Booked");
@@ -121,25 +114,14 @@ exports.postBookMovie = async (req, res, next) => {
 
     // update bookings
     const bookingsArrayIndex = movie.bookings.findIndex(
-      (item) => item.date === date
+      (item) => item.date === dateStr
     );
     if (bookingsArrayIndex !== -1) {
       movie.bookings[bookingsArrayIndex].users.push(req.user);
+      movie.bookings[bookingsArrayIndex].total += 1;
     } else {
-      movie.bookings.push({ date, users: [req.user] });
+      movie.bookings.push({ date: dateStr, users: [req.user], total: 1 });
     }
-
-    // update booked seats
-    const seatsBookedArrayIndex = movie.seatsBooked.findIndex(
-      (item) => item.date === date
-    );
-    if (seatsBookedArrayIndex !== -1) {
-      movie.seatsBooked[seatsBookedArrayIndex].number += 1;
-    } else {
-      movie.seatsBooked.push({ date, number: 1 });
-    }
-
-    // save movie
     await movie.save();
 
     // print the ticket
