@@ -9,11 +9,10 @@
             <li class="nav-item <%= path === '/movies' || path === '/admin/movies' ? 'active' : '' %>">
                 <a class="nav-link" href='<%= isAdminSignedIn ? "/admin/movies" : "/movies"%>'>Movies</a>
             </li>
-            <li class="nav-item <%= path === '/bookings' || path === '/admin/bookings' ? 'active' : '' %>">
-                <a class="nav-link"
-                    href='<%= isSignedIn ? "/bookings" : isAdminSignedIn ? "/admin/bookings" : "/signin"%>'>Bookings</a>
-            </li>
             <% if(isSignedIn){ %>
+            <li class="nav-item <%= path === '/bookings' ? 'active' : '' %>">
+                <a class="nav-link" href="/bookings">Bookings</a>
+            </li>
             <li class="nav-item <%= path === '/profile' ? 'active' : '' %>">
                 <a class="nav-link" href="/profile">Profile</a>
             </li>
