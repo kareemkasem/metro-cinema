@@ -1,6 +1,7 @@
 // imports .................................................
 const { validationResult } = require("express-validator");
 const getMoviesHelper = require("../middleware/getMoviesHelper");
+const makePdfTicket = require("../utils/makePdfTicket");
 const Movie = require("../models/movie");
 const moment = require("moment");
 // .........................................................
@@ -128,7 +129,8 @@ exports.postBookMovie = async (req, res, next) => {
     await movie.save();
 
     // print the ticket
-    res.redirect("/");
+    const time = moment(movie.startDate).format("hh:mm a");
+    makePdfTicket(res, movie.title, dateStr, time, req.user.name, req.user._id);
   } catch (error) {
     console.log(error);
     return reloadWithError();
