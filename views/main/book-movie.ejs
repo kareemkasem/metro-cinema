@@ -19,8 +19,8 @@
                 </h5>
                 <div class="form-group">
                     <label for="date" class="h5 text-primary">Date:</label>
-                    <input type="date" class="form-control" id="date" name="date"
-                        value="<%= oldInput && oldInput.date %>" min="<%= startDate %>" max="<%= endDate %>" />
+                    <input type="date" class="form-control" id="date" name="date" min="<%= minDate %>"
+                        max="<%= maxDate %>" />
                 </div>
                 <div class="alert alert-primary my-3">
                     There is supposed to be a payment method here using Stripe Payments (which is very easy to implement

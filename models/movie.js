@@ -26,6 +26,7 @@ const movieSchema = new mongoose.Schema({
             ref: "User",
           },
         ],
+        ticketIds: [String],
         total: {
           type: Number,
           default: 0,

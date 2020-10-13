@@ -4,6 +4,7 @@ const getMoviesHelper = require("../middleware/getMoviesHelper");
 const makePdfTicket = require("../utils/makePdfTicket");
 const Movie = require("../models/movie");
 const moment = require("moment");
+const { v4: uuid } = require("uuid");
 // .........................................................
 
 let inputError;
@@ -62,17 +63,22 @@ exports.getBookMovie = async (req, res, next) => {
 
   try {
     const movie = await Movie.findById(movieId);
-    let { startDate, endDate } = movie;
+    const { startDate, endDate } = movie;
     const time = moment(startDate).format("hh:mm a");
-    startDate = moment(startDate).format("YYYY-MM-DD");
-    endDate = moment(endDate).format("YYYY-MM-DD");
+    let minDate;
+    if (startDate < new Date()) {
+      minDate = moment().format("YYYY-MM-DD");
+    } else {
+      minDate = moment(startDate).format("YYYY-MM-DD");
+    }
+    const maxDate = moment(endDate).format("YYYY-MM-DD");
     res.render("main/book-movie", {
       path: "/bookings",
       pageTitle: "Book Movie",
       errorMessage: inputError,
       oldInput: null,
-      startDate,
-      endDate,
+      minDate,
+      maxDate,
       time,
       movieId,
       movieTitle: movie.title,
@@ -108,29 +114,32 @@ exports.postBookMovie = async (req, res, next) => {
 
     // update user bookings
     const user = req.user;
-    const newBookedEntry = { name: movie.title, date };
-    const alreadyBookd = user.bookings.indexOf(newBookedEntry) !== -1;
-    if (alreadyBookd) {
-      return reloadWithError("Already Booked");
-    }
+    const newBookedEntry = { movie, date };
     user.bookings.push(newBookedEntry);
     await user.save();
 
     // update bookings
+    const ticketId = uuid();
     const bookingsArrayIndex = movie.bookings.findIndex(
       (item) => item.date === dateStr
     );
     if (bookingsArrayIndex !== -1) {
       movie.bookings[bookingsArrayIndex].users.push(req.user);
       movie.bookings[bookingsArrayIndex].total += 1;
+      movie.bookings[bookingsArrayIndex].ticketIds.push(ticketId);
     } else {
-      movie.bookings.push({ date: dateStr, users: [req.user], total: 1 });
+      movie.bookings.push({
+        date: dateStr,
+        users: [req.user],
+        ticketIds: [ticketId],
+        total: 1,
+      });
     }
     await movie.save();
 
     // print the ticket
     const time = moment(movie.startDate).format("hh:mm a");
-    makePdfTicket(res, movie.title, dateStr, time, req.user.name, req.user._id);
+    makePdfTicket(res, movie.title, dateStr, time, ticketId);
   } catch (error) {
     console.log(error);
     return reloadWithError();

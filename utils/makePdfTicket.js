@@ -1,6 +1,6 @@
 const pdfKit = require("pdfkit");
 
-function makePdfTicket(res, movieTitle, date, time, userName, userId) {
+function makePdfTicket(res, movieTitle, date, time, ticketId) {
   const pdf = new pdfKit();
   pdf.pipe(res);
   pdf.fontSize(30).fillColor("red").text("METRO CINEMA", { align: "center" });
@@ -29,16 +29,9 @@ function makePdfTicket(res, movieTitle, date, time, userName, userId) {
 
   pdf
     .fillColor("red")
-    .text("Name: ", { continued: true })
-    .fillColor("black")
-    .text(userName);
-  pdf.text(" ");
-
-  pdf
-    .fillColor("red")
     .text("Id: ", { continued: true })
     .fillColor("black")
-    .text(userId);
+    .text(ticketId);
 
   pdf.end();
 

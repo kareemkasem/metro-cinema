@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 // imports ....................................................
 const mongoose = require("mongoose");
 // ............................................................
@@ -19,7 +20,10 @@ const userSchema = new mongoose.Schema({
     default: [],
     type: [
       {
-        name: String,
+        movie: {
+          type: ObjectId,
+          ref: "Movie",
+        },
         date: Date,
       },
     ],
