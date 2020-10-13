@@ -8,6 +8,7 @@ const mongodbStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const multer = require("multer");
 const { v4: uuid } = require("uuid");
+const helmet = require("helmet");
 
 const errorController = require("./controllers/errors");
 const User = require("./models/user");
@@ -19,6 +20,8 @@ const adminAuthCheck = require("./middleware/adminAuthCheck");
 // configs
 const app = express();
 app.set("view engine", "ejs");
+
+// static assets
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   "/uploads/images",
@@ -134,6 +137,5 @@ app.use(errorController.get404);
 
 // errors
 app.use((error, req, res, next) => {
-  console.log(error);
   res.redirect("/500");
 });

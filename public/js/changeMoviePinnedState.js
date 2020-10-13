@@ -23,7 +23,6 @@ const changeMoviePinnedState = async (btn, id, csrfToken) => {
     btn.closest(".main-card").querySelector("#pinned-badge").style.display =
       pinnedBadgeDisplay === "none" ? "block" : "none";
   } catch (error) {
-    console.log(error);
     document.getElementById("error-alert").innerText =
       "couldn't pin/unpin movie";
     document.getElementById("error-alert").style.display = "block";

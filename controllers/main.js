@@ -52,7 +52,6 @@ exports.postChangeName = async (req, res, next) => {
     await req.user.save();
     res.redirect("/profile");
   } catch (error) {
-    console.log(error);
     inputError = "an error occured";
     return res.redirect("/change-name");
   }
@@ -84,7 +83,6 @@ exports.getBookMovie = async (req, res, next) => {
       movieTitle: movie.title,
     });
   } catch (error) {
-    console.log(error);
     inputError = "an error occured. please try again.";
     redirect("/book-movie");
   }
@@ -144,7 +142,6 @@ exports.postBookMovie = async (req, res, next) => {
     const time = moment(movie.startDate).format("hh:mm a");
     makePdfTicket(res, movie.title, dateStr, time, ticketId);
   } catch (error) {
-    console.log(error);
     return reloadWithError();
   }
 };
@@ -165,7 +162,6 @@ exports.getBookings = async (req, res, next) => {
       bookings,
     });
   } catch (error) {
-    console.log(error);
     res.redirect("/");
   }
 };

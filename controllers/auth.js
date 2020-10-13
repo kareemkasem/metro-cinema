@@ -17,7 +17,6 @@ const signIn = (req, res, user) => {
   req.session.user = user;
   req.session.save((err) => {
     if (err) {
-      console.log(err);
       res.render("auth/signin", {
         path: "/signin",
         pageTitle: "sign in",
@@ -112,13 +111,11 @@ exports.postSignUp = async (req, res, next) => {
       });
       signIn(req, res, user);
     } catch (err) {
-      console.log(err);
       reloadWithError(
         "user created successfully but confirmation email couldn't be sent"
       );
     }
   } catch (err) {
-    console.log(err);
     reloadWithError();
     return;
   }
@@ -159,14 +156,12 @@ exports.postSignIn = async (req, res, next) => {
       return;
     }
   } catch (error) {
-    console.log(error);
     reloadWithError("an error occured");
   }
 };
 
 exports.postSignOut = (req, res, next) => {
   req.session.destroy((err) => {
-    err && console.log(er);
     res.redirect("/");
   });
 };
@@ -265,7 +260,6 @@ exports.postNewPassword = async (req, res, next) => {
   }
 
   if (password !== retypePassword) {
-    console.log(token);
     inputError = "passwords don't match";
     res.redirect(`/new-password/${token}`);
     return;
@@ -293,7 +287,6 @@ exports.postNewPassword = async (req, res, next) => {
     await user.save();
     res.redirect("/signin");
   } catch (error) {
-    console.log(error);
     inputError = "an error occured";
     res.redirect(`/new-password/${token}`);
     return;
@@ -400,7 +393,7 @@ exports.postDeleteAccount = async (req, res, next) => {
   }
 
   req.session.destroy((err) => {
-    err && console.log(err);
+    res.redirect("/");
   });
 
   res.redirect("/delete-account-success");

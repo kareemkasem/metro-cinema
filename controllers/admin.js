@@ -1,8 +1,10 @@
 // imports ........................................
 const { validationResult } = require("express-validator");
 const moment = require("moment");
-const getMoviesHelper = require("../middleware/getMoviesHelper");
+const fs = require("fs");
+const path = require("path");
 
+const getMoviesHelper = require("../middleware/getMoviesHelper");
 const Movie = require("../models/movie");
 // ................................................
 
@@ -121,7 +123,6 @@ exports.postAddMovie = (req, res, next) => {
     })
     .catch((err) => {
       next(err);
-      console.log(err);
     });
 };
 
@@ -194,7 +195,6 @@ exports.postEditMovie = async (req, res, next) => {
     })
     .catch((err) => {
       next(err);
-      console.log(err);
     });
 };
 
@@ -213,10 +213,20 @@ exports.changeMovieHiddenState = async (req, res, next) => {
 exports.deleteMovie = async (req, res, next) => {
   const id = req.params.id;
   try {
-    await Movie.findByIdAndDelete(id);
-    res.status(200).json({ message: "successfully deleted" });
+    const movie = await Movie.findById(id);
+    fs.unlink(
+      path.join(__dirname, "..", movie.imgUrl.substr(1)),
+      async (err) => {
+        if (err) {
+          res.status(500).json({ message: "couldn't delete" });
+        } else {
+          await movie.remove();
+          res.status(200).json({ message: "successfully deleted" });
+        }
+      }
+    );
   } catch (error) {
-    res.status(500).json({ message: "couldn't delete deleted" });
+    res.status(500).json({ message: "couldn't delete" });
   }
 };
 

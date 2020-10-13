@@ -24,7 +24,6 @@ const changeMovieHiddenState = async (btn, id, csrfToken) => {
     btn.closest(".main-card").querySelector("#hidden-badge").style.display =
       hiddenBadgeDisplay === "none" ? "block" : "none";
   } catch (error) {
-    console.log(error);
     document.getElementById("error-alert").innerText =
       "couldn't hide/unhide movie";
     document.getElementById("error-alert").style.display = "block";

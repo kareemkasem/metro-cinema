@@ -96,7 +96,6 @@ exports.postAuth = async (req, res, next) => {
     req.session.admin = admin;
     req.session.save((err) => {
       if (err) {
-        console.log(err);
         reloadWithError(err);
         return;
       }
@@ -109,7 +108,6 @@ exports.postAuth = async (req, res, next) => {
 
 exports.postSignout = (req, res, next) => {
   req.session.destroy((err) => {
-    err && console.log(er);
     res.redirect("/");
   });
 };

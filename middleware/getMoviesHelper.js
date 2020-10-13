@@ -86,7 +86,6 @@ module.exports = async (req, res, filters, path) => {
       nextArrow: pageNumbers[page + 1],
     });
   } catch (err) {
-    console.log(err);
     res.status(500);
     next(err);
   }
