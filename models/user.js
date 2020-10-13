@@ -20,11 +20,9 @@ const userSchema = new mongoose.Schema({
     default: [],
     type: [
       {
-        movie: {
-          type: ObjectId,
-          ref: "Movie",
-        },
+        movie: String,
         date: Date,
+        ticketId: String,
       },
     ],
   },

@@ -104,6 +104,7 @@ exports.postBookMovie = async (req, res, next) => {
 
   try {
     const movie = await Movie.findById(movieId);
+    const ticketId = uuid();
 
     const bookingsForDate = movie.bookings.find((x) => x.date === dateStr);
     const takenSeats = bookingsForDate ? bookingsForDate.total : 0;
@@ -114,12 +115,14 @@ exports.postBookMovie = async (req, res, next) => {
 
     // update user bookings
     const user = req.user;
-    const newBookedEntry = { movie, date };
+    const dateAndTime = new Date(
+      date + " " + moment(movie.startDate).format("hh:mm:00")
+    );
+    const newBookedEntry = { movie: movie.title, date: dateAndTime, ticketId };
     user.bookings.push(newBookedEntry);
     await user.save();
 
     // update bookings
-    const ticketId = uuid();
     const bookingsArrayIndex = movie.bookings.findIndex(
       (item) => item.date === dateStr
     );
@@ -144,4 +147,30 @@ exports.postBookMovie = async (req, res, next) => {
     console.log(error);
     return reloadWithError();
   }
+};
+
+exports.getBookings = async (req, res, next) => {
+  try {
+    let bookings = req.user.bookings;
+    bookings = await bookings.map((bk) => {
+      const ticketId = bk._id;
+      const date = moment(bk.date).format("MMM DD YYYY");
+      const time = moment(bk.date).format("hh:mm a");
+      const movie = bk.movie;
+      return { ticketId, date, time, movie };
+    });
+    res.render("main/bookings", {
+      path: "/bookings",
+      pageTitle: "Bookings",
+      bookings,
+    });
+  } catch (error) {
+    console.log(error);
+    res.redirect("/");
+  }
+};
+
+exports.postGetTicket = (req, res, next) => {
+  const { movieTitle, date, time, ticketId } = req.body;
+  makePdfTicket(res, movieTitle, date, time, ticketId);
 };

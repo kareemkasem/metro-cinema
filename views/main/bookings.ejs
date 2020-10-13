@@ -1,0 +1,28 @@
+<%- include("../include/top.ejs") %>
+</head>
+
+<body>
+    <%- include("../include/nav.ejs") %>
+    <div class="container">
+        <% bookings.forEach(bk => { %>
+        <div class="card my-3" style="position: relative">
+            <div class="card-header">
+                <span class="text-primary">Ticket Serial: </span><%= bk.ticketId %>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><span class="text-primary">Movie: </span><%= bk.movie %></h5>
+                <h5 class="card-title"><span class="text-primary">Date: </span><%= bk.date %></h5>
+                <h5 class="card-title"><span class="text-primary">Time: </span><%= bk.time %></h5>
+            </div>
+            <form action="/get-ticket" method="post" style="position: absolute; right: 12px; bottom: 12px;">
+                <input type="hidden" name="movieTitle" value="<%= bk.movie %>">
+                <input type="hidden" name="date" value="<%= bk.date %>">
+                <input type="hidden" name="time" value="<%= bk.time %>">
+                <input type="hidden" name="ticketId" value="<%= bk.ticketId %>">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <button type="submit" class="btn btn-primary">Print Ticket</button>
+            </form>
+        </div>
+        <% }) %>
+    </div>
+    <%- include("../include/bottom.ejs") %>

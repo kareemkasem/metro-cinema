@@ -12,6 +12,7 @@ router.get("/movies", mainController.getMovies);
 router.get("/profile", userAuthCheck, mainController.getProfile);
 router.get("/change-name", userAuthCheck, mainController.getChangeName);
 router.get("/book-movie/:id", userAuthCheck, mainController.getBookMovie);
+router.get("/bookings", userAuthCheck, mainController.getBookings);
 router.post(
   "/change-name",
   userAuthCheck,
@@ -21,5 +22,6 @@ router.post(
   mainController.postChangeName
 );
 router.post("/book-movie/:id", userAuthCheck, mainController.postBookMovie);
+router.post("/get-ticket", mainController.postGetTicket);
 
 module.exports = router;

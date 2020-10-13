@@ -29,7 +29,7 @@ function makePdfTicket(res, movieTitle, date, time, ticketId) {
 
   pdf
     .fillColor("red")
-    .text("Id: ", { continued: true })
+    .text("Ticket Serial: ", { continued: true })
     .fillColor("black")
     .text(ticketId);
 
