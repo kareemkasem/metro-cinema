@@ -8,7 +8,6 @@ const mongodbStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const multer = require("multer");
 const { v4: uuid } = require("uuid");
-const helmet = require("helmet");
 
 const errorController = require("./controllers/errors");
 const User = require("./models/user");
