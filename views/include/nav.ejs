@@ -24,6 +24,12 @@
             <% } %>
         </ul>
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item mx-3">
+                <a href="https://github.com/kareemkasem/metro-cinema" target="_blank" title="view on GitHub"
+                    class="normal-link h2 text-light">
+                    <i class="fab fa-github"></i>
+                </a>
+            </li>
             <% if(isSignedIn || isAdminSignedIn){ %>
             <li class="nav-item ml-3">
                 <form action='<%= isSignedIn ? "/signout" : isAdminSignedIn ? "/admin/signout" : "/" %>' method="POST">
