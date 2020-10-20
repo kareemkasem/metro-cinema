@@ -55,9 +55,9 @@ a website to create and manage movies for a cinema and book tickets.
 
 ## Todos
 
-[] host static files on a service like Amazon S3.
-[] build a companion app for tickets.
-[] add payment method.
-[] add Auditorium selection capability.
-[] add checking for date and auditorium movie conflicts.
-[] add authentication state persistence.
+- [ ] host static files on a service like Amazon S3.
+- [ ] build a companion app for tickets.
+- [ ] add payment method.
+- [ ] add Auditorium selection capability.
+- [ ] add checking for date and auditorium movie conflicts.
+- [ ] add authentication state persistence.
