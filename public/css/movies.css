@@ -29,7 +29,8 @@
 }
 
 .description {
-  height: 10rem;
+  height: 9.6rem;
+  line-height: 1.2rem;
   overflow: auto;
 }
 
