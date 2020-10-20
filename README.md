@@ -33,10 +33,15 @@ a website to create and manage movies for a cinema and book tickets.
 ## Main Technologies Used:
 
 - nodeJS
+
 - Express
+
 - Ejs Templating Engine.
+
 - Bootstrap
+
 - SendGrid mail service.
+
 - MongoDB and mongoose.
 
 ## notes:
@@ -50,8 +55,9 @@ a website to create and manage movies for a cinema and book tickets.
 
 ## Todos
 
-1. host static files on a service like Amazon S3.
-2. build a companion app for tickets.
-3. add payment method.
-4. add Auditorium selection capability.
-5. add checking for date and Auditorium movie conflicts.
+[] host static files on a service like Amazon S3.
+[] build a companion app for tickets.
+[] add payment method.
+[] add Auditorium selection capability.
+[] add checking for date and auditorium movie conflicts.
+[] add authentication state persistence.
