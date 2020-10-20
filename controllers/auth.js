@@ -105,7 +105,9 @@ exports.postSignUp = async (req, res, next) => {
         html: `
           <h3>hi ${name.split(" ")[0]}!</h3>
           <h3>you now have an account on metro cinema</h3>
-          <h5>check out our <a href="http://localhost:8000">latest movies</a> and get your ticket with a few clicks!</h5>
+          <h5>check out our <a href="${
+            process.env.WEBSITE_URL
+          }">latest movies</a> and get your ticket with a few clicks!</h5>
           </div>
           `,
       });
@@ -224,7 +226,9 @@ exports.postResetPassword = async (req, res, next) => {
                   user.name.split(" ")[0]
                 }, you requested a password reset</h3>
                 <hr />
-                <h5>click <a href="http://localhost:8000/new-password/${token}">here</a> to reset your password</h5>
+                <h5>click <a href="${
+                  process.env.WEBSITE_URL
+                }/new-password/${token}">here</a> to reset your password</h5>
                 <p>please notice that this link is valid for 8 hours only</p>
           `,
         });
