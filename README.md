@@ -33,10 +33,9 @@ a website to create and manage movies for a cinema and book tickets.
 ## Main Technologies Used:
 
 - nodeJS
-
 - Express
-
 - Ejs Templating Engine.
+- Bootstrap
 - SendGrid mail service.
 - MongoDB and mongoose.
 
