@@ -47,3 +47,11 @@ a website to create and manage movies for a cinema and book tickets.
 
 - this app requires some environment variables in a `nodemon.json` file as follows:
   `{ "env": { "MONGO_URI": MY_URI, "SESSION_SECRET": MY_SECRET, "SENDGRID_API_KEY": SEND_GRID_KEY, "ADMIN_EMAIL": SEND_GRID_EMAIL, "PORT": PORT } }`
+
+## Todos
+
+1. host static files on a service like Amazon S3.
+2. build a companion app for tickets.
+3. add payment method.
+4. add Auditorium selection capability.
+5. add checking for date and Auditorium movie conflicts.
