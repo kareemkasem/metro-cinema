@@ -5,13 +5,13 @@
     <%- include("../include/nav.ejs") %>
     <form autocomplete="off" method="POST" action="<% id ? '/admin/edit-movie/' + id : '/admin/add-movie' %>"
         class="container my-2" enctype="multipart/form-data">
-        <% if(errorMessage){ %>
-        <div class="alert alert-danger text-center my-2" role="alert">
-            <%= errorMessage %>
-        </div>
-        <% } %>
         <div class="row justify-content-center">
             <div class="col-12 col-md-8">
+                <% if(errorMessage){ %>
+                <div class="alert alert-danger text-center my-2" role="alert">
+                    <%= errorMessage %>
+                </div>
+                <% } %>
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title"
@@ -49,14 +49,10 @@
                         value="<%= oldInput && oldInput.seats %>" />
                 </div>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                <div class="row">
-                    <div class="col-6">
-                        <button type="submit"
-                            class="btn btn-success btn-lg btn-block"><%= id ? "Update" : oldInput ? "Correct" : "Add" %></button>
-                    </div>
-                    <div class="col-6">
-                        <a class="btn btn-warning btn-lg btn-block" href="/admin/movies">Cancel</a>
-                    </div>
+                <div class="row justify-content-end mr-0">
+                    <button type="submit"
+                        class="btn btn-success px-5 py-1 m-1"><%= id ? "Update" : oldInput ? "Correct" : "Add" %></button>
+                    <a class="btn btn-warning px-5 py-1 m-1" href="/admin/movies">Cancel</a>
                 </div>
             </div>
         </div>

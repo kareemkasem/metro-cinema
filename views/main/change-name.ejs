@@ -4,19 +4,21 @@
 <body>
     <%- include("../include/nav.ejs") %>
     <div class="container">
-        <% if(errorMessage){ %>
-        <div class="alert alert-danger text-center my-2" role="alert">
-            <%= errorMessage %>
-        </div>
-        <% } %>
         <div class="row justify-content-center">
-            <form class="col-12 col-md-8" method="POST" action="/change-name" autocomplete="off">
+            <form class="col-12 col-md-6" method="POST" action="/change-name" autocomplete="off">
+                <% if(errorMessage){ %>
+                <div class="alert alert-danger text-center my-2" role="alert">
+                    <%= errorMessage %>
+                </div>
+                <% } %>
                 <div class="form-group">
                     <label for="INputName">New Name</label>
                     <input type="text" class="form-control" id="INputName" name="name">
                 </div>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                <button type="submit" class="btn btn-success btn-block">submit</button>
+                <div class="row justify-content-end mr-0">
+                    <button type="submit" class="btn btn-success">submit</button>
+                </div>
             </form>
         </div>
     </div>
